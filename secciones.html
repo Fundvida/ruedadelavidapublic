@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PRB</title>
+
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="css/M_prueba.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+    />
+    <link rel="stylesheet" href="css/estilo1.css" />
+    <link rel="stylesheet" href="css/seccion.css" />
+    <link rel="stylesheet" href="./css/todo.css" />
+  </head>
+
+  <body>
+    <!-- =====================
+                menu
+    =======================> -->
+    <div class="box-2" style="margin: 2rem 2rem 2rem 2rem">
+      <a href="index.html">
+        <div class="btn btn-two">
+          <i
+            id="ping"
+            class="fa fa-home"
+            style="
+              color: #ffffff;
+              position: absolute;
+              justify-content: center;
+              left: 0;
+              right: 0;
+              align-items: center;
+              width: 100%;
+              height: 100%;
+              display: flex;
+              bottom: 0;
+            "
+          ></i>
+        </div>
+      </a>
+    </div>
+
+    <div class="container__cover">
+      <div class="nombreApp">
+        <label class="nombreApp text-focus-in"> RUEDA DE LA VIDA</label>
+      </div>
+
+      <div class="contTitulo">
+        <label class="titulo" style="color: #4eb7ff"
+          >PERSONALIZA TU PRUEBA</label
+        >
+      </div>
+      <!-- información  -->
+      <div class="alerta">
+        <div class="left">
+          <script src="https://cdn.lordicon.com/bhenfmcm.js"></script>
+          <lord-icon
+            src="https://cdn.lordicon.com/reybmpdc.json"
+            trigger="hover"
+            colors="primary:#66a1ee,secondary:#ffc738,tertiary:#ebe6ef,quaternary:#4bb3fd,quinary:#3a3347"
+            style="width: 250px; height: 250px"
+          >
+          </lord-icon>
+        </div>
+        <div class="right">
+          <h3 class="text-shadow-drop-bottom">
+            Estas son los áreas de la rueda de la vida que no se pueden excluir
+            y son necesarias para tu evaluación de autoconocimiento.
+          </h3>
+          <br /><br>
+          <h4 class="parrafo focus-in-expand" style="text-align: center; font-size: 18px; word-break: break-word;">
+            Contribución Social, Ocio, Salud, Familia,
+          </h4>
+          <br />
+          <h4 class="parrafo focus-in-expand" style="text-align: center; font-size: 18px; word-break: break-word;">
+            Amistades, Hogar, Crecimiento Personal
+          </h4>
+          <br />
+        </div>
+      </div>
+
+      <!-- tabla de sección -->
+      <div class="app">
+        <div class="d-flex flex-row w-50">
+          <span id="btn_new_section"> <i class="fas fa-plus"></i></span>
+        </div>
+        <div class="msg" id="msg_error_input"></div>
+        <div class="table-responsive">
+          <table class="table" id="tabla_secciones">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Secciones</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="tbody_secciones"></tbody>
+          </table>
+        </div>
+        <!-- Modal -->
+        <form
+          class="modal fade"
+          id="form_update_seccion"
+          tabindex="-1"
+          aria-labelledby="exampleModalLabel"
+          aria-hidden="true"
+        >
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-body">
+                <p>Sección</p>
+                <input
+                  type="hidden"
+                  class="form-control"
+                  name=""
+                  id="txt_number_seccion"
+                />
+                <input
+                  type="text"
+                  class="form-control"
+                  name=""
+                  id="txt_nombre_seccion"
+                />
+                <div class="msg" id="msg_error"></div>
+                <br />
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <!-- <button class="buttonConf" id="eliminaField">Actualizar Rueda</button> -->
+      
+
+
+      <button id="eliminaField" class="nuevoF">
+        Actualizar Rueda
+      </button>
+      <br>
+    </div>
+    <!-- contenedor final -->
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+      crossorigin="anonymous"
+    ></script>
+    <script src="./js/sc4.js"></script>
+    <!-- <script src="./js/tablaform.js"></script> -->
+  </body>
+</html>

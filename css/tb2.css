@@ -1,0 +1,75 @@
+/* Estilos para la tabla */
+#tabla__container {
+  
+    width: 100%;
+    background: white;
+    border: 0 none;
+    border-radius: 3px;
+    box-shadow: 0 0 15px 1px rgba(0, 0, 0, 0.4);
+    padding: 20px 30px;
+    box-sizing: border-box;
+    overflow-x: auto;
+
+    align-items: center;
+    justify-content: center;
+    font-size: 0.7rem;
+    font-family: 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+  }
+  
+  #tabla-respuestas {
+    border-collapse: collapse;
+    width: 100%;
+    justify-content: center;
+    /* white-space:nowrap;  */
+    white-space:normal;
+  }
+  
+  #tabla-respuestas th {
+    background-color: #F6F6F6;
+    font-weight:lighter;
+    text-align: center;
+    font-size: 0.8rem;
+    font-family: 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+  }
+  
+  #tabla-respuestas td,
+  #tabla-respuestas th {
+    padding: 10px;
+    border: 1px solid #ddd;
+    
+  }
+  
+  #tabla-respuestas tr:nth-child(even) {
+    background-color: #f2f2f2;
+  }
+  
+  #tabla-respuestas tbody tr:hover {
+    background-color: #251348;
+    color: #ebdfe5;
+  }
+  
+  #rojo{color: red;} #amarillo{color: rgb(208, 208, 29);} #verde{color: green;}
+
+  #dataTable {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  /* Estilos para el encabezado de la tabla */
+  #dataTable thead th {
+    background-color: #f2f2f2;
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+  }
+
+  /* Estilos para las celdas de datos de la tabla */
+  #dataTable tbody td {
+    border: 1px solid #ddd;
+    padding: 8px;
+  }
+
+  /* Estilos alternos para las filas de la tabla */
+  #dataTable tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+  }

@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+    <link rel="stylesheet" href="./css/menu.css">
+    <link rel="stylesheet" href="./css/signal.css">
+    <link rel="stylesheet" href="./css/todo.css">
+
+
+    <title>header</title>
+
+</head>
+<!--desde el body-->
+
+<body>
+    
+    <div class="container">
+        
+        <div class="nombreApp">
+            <label class="nombreApp text-focus-in"> RUEDA DE LA VIDA</label>
+        </div> 
+
+        <div class="logo" style="display:flex ; flex-direction: column;">
+            <img src="./imagenes/LOGO-BLANCO-CON-SLOGAN.webp" class="logo-image">
+            <div style="color: #FFFFFF;padding-top: 2rem;">
+                Bienvenido "Listo/Lista para mejorar tu autoconocimiento"
+            </div>
+        </div>
+
+        <div class="serviceBox">
+            <div class="icon" style="--i: #4eb7ff">
+                <a href="secciones.html"><i class="fas fa-marker"></i></a>
+            </div>
+            <div class="content">
+                <h2>PERSONALIZA</h2>
+                <p>
+                    Tu diseño de la rueda de la vida.
+                </p>
+            </div>
+        </div>
+        <!--prueba Personaliza -->
+
+        <div class="serviceBox">
+            <div class="icon" style="--i: #ffb508">
+                <a href="inform.html"><i class="fas fa-question"></i></a>
+            </div>
+            <div class="content">
+                <h2>CONOCE</h2>
+                <p>
+                    Conoce más sobre la rueda de la vida.
+                </p>
+            </div>
+        </div> <!-- informacion -->
+
+        <div id="pruebaContainer">
+            <div class="serviceBox" id="prueba">
+                <div class="icon" style="--i: #53bb6b">
+                    <a href="pruebav1.html"><i class="fab fa-steam"></i></a>
+                </div>
+                <div class="content">
+                    <h2>INICIA</h2>
+                    <p>
+                        
+                    </p>
+                </div>
+            </div> <!-- prueba -->
+            <div class="mensaje">
+                <script src="https://cdn.lordicon.com/bhenfmcm.js"></script>
+                <lord-icon src="https://cdn.lordicon.com/vyukcgvf.json" trigger="hover"
+                    colors="outline:#121331,primary:#ffc738,secondary:#92140c" style="width:50px;height:50px"
+                    id="lord-icon">
+                </lord-icon>
+                <div class="imageOverlay">
+                    <p>Aquí puedes iniciar tu prueba.</p>
+                </div>
+            </div>
+
+
+
+            <div class="right" id="hand"></div>
+
+        </div>
+        <script>
+            if (localStorage.getItem('reload'))
+                localStorage.removeItem('reload');
+            const pruebaContainer = document.getElementById("pruebaContainer");
+            const mensaje = document.querySelector(".mensaje");
+
+            pruebaContainer.addEventListener("mouseenter", function () {
+                mensaje.classList.add("fade-in");
+            });
+
+            pruebaContainer.addEventListener("mouseleave", function () {
+                mensaje.classList.remove("fade-in");
+            });
+        </script>
+
+        <!--     <div class="serviceBox" >
+            <div class="icon" style="--i: #37ba82">
+                <a href="#0"></a><i class="fas fa-heart"></i></a>
+            </div>
+            <div class="content"  >
+                <h2>FUNDACIÓN</h2>
+                <p>
+                    Conoce un poco a la "FUNDACIÓN EDUCAR PARA LA VIDA".
+                </p>
+            </div>
+        </div>  Fundacion -->
+
+    </div>
+    <!-- <script type="module" src="js/fondo.js"></script> -->
+</body>
+
+</html>

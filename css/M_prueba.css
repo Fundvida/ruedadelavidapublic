@@ -1,0 +1,166 @@
+@import "https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300";
+
+#ping {
+  font-size: 1.1rem;
+  
+}
+
+div[class*="box"] {
+  margin-top: 2rem;
+  margin-left: 2.7rem;
+  margin-right: 1rem;
+  height: 30%;
+  width: 4rem;
+  border-radius: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: right;
+}
+
+.box-2 {
+  background-color: #e6005f;
+}
+.box-3 {
+  background-color: #bd21a0;
+}
+#menu_horizontal{
+  display: flex;
+  flex-direction: row;
+}
+
+.btn {
+  line-height: 50px;
+  height: 50px;
+  text-align: center;
+  width: 110px;
+  cursor: pointer;
+}
+body {
+  background-color: #000000;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100%25' height='100%25' viewBox='0 0 800 800'%3E%3Cg %3E%3Ccircle fill='%23000000' cx='400' cy='400' r='600'/%3E%3Ccircle fill='%23260f35' cx='400' cy='400' r='500'/%3E%3Ccircle fill='%2335164b' cx='400' cy='400' r='400'/%3E%3Ccircle fill='%23411a5b' cx='400' cy='400' r='300'/%3E%3Ccircle fill='%234b1e6a' cx='400' cy='400' r='200'/%3E%3Ccircle fill='%23542276' cx='400' cy='400' r='100'/%3E%3C/g%3E%3C/svg%3E");
+  background-attachment: fixed;
+  background-size: cover;
+}
+
+.btn-two {
+  color: #fff;
+  transition: all 0.5s;
+  position: relative;
+}
+.btn-two span {
+  z-index: 2;
+  display: block;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+.btn-two::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  transition: all 0.5s;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background-color: rgba(255, 255, 255, 0.1);
+}
+.btn-two::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  transition: all 0.5s;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background-color: rgba(255, 255, 255, 0.1);
+  
+}
+.btn-two:hover::before {
+  transform: rotate(-45deg);
+  background-color: rgba(255, 255, 255, 0);
+}
+.btn-two:hover::after {
+  transform: rotate(45deg);
+  background-color: rgba(255, 255, 255, 0);
+}
+
+
+/** AUMENTADO**/
+.buttons3 {
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
+
+#downloadButton {
+  height: 2rem;
+  width: 14rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  color: #ffffff;
+  background-color: #5e2abf;
+  border-style: solid;
+  border-width: 2px 2px 2px 2px;
+  border-color: rgb(216, 204, 215);
+  border-radius: 7px;
+  padding: 16px;
+  transform: translate(0px, 0px) rotate(0deg);
+  transition: 0.2s;
+  box-shadow: -4px -2px 16px 0px #7f0fdad1, 4px 2px 16px 0px rgba(111, 8, 171, 0.48);
+}
+#downloadButton:hover {
+  color: #fefefe;
+  background-color: #1ABC9C;
+  box-shadow: -2px -1px 8px 0px #52b752, 2px 1px 8px 0px rgba(4, 230, 87, 0.644);
+}
+#downloadButton:active {
+  box-shadow: none;
+}
+
+#downloadButtonpdf {
+  height: 2rem;
+  width: 14rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  color: #ffffff;
+  background-color: #5e2abf;
+  border-style: solid;
+  border-width: 2px 2px 2px 2px;
+  border-color: rgb(216, 204, 215);
+  border-radius: 7px;
+  padding: 16px;
+  transform: translate(0px, 0px) rotate(0deg);
+  transition: 0.2s;
+  box-shadow: -4px -2px 16px 0px #7f0fdad1, 4px 2px 16px 0px rgba(111, 8, 171, 0.48);
+}
+#downloadButtonpdf:hover {
+  color: #fefefe;
+  background-color: #bc1a25;
+  box-shadow: -2px -1px 8px 0px #c50b0b, 2px 1px 8px 0px rgba(223, 26, 26, 0.644);
+}
+#downloadButtonpdf:active {
+  box-shadow: none;
+}
+
