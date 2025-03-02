@@ -49,7 +49,7 @@ function signIn() {
 
   let params = {
     client_id:
-      "1093028196815-012jijpca475e4v76puep2aj9h0muk6u.apps.googleusercontent.com",
+      "colocar su client_id",
     redirect_uri: "http://localhost/ruedadelavida/pruebav1.html",
     response_type: "token",
     scope:
