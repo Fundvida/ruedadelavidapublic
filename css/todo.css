@@ -11,16 +11,10 @@ animation: text-focus-in 1s cubic-bezier(0.55, 0.085, 0.68, 0.53) both;
 }
 
 .nombreApp label {
-    background-image: linear-gradient(
-    to right,
-    #b94145,
-    #67c534,
-    #564fba
-  ); /* Cambia los colores según tus preferencias */
     -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    font-family: "Cabin Sketch", cursive;
+    font-family: 'Cabin Sketch';
     padding: 10px;
+    color: #505B80;
 }
 
 @-webkit-keyframes text-focus-in {
