@@ -15,7 +15,7 @@
   align-items: center;
   padding: 15px;
   border-radius: 4rem;
-  box-shadow: 0 0 20px 5px rgba(255, 255, 255, 0.5);
+  /* box-shadow: 0 0 20px 5px rgba(255, 255, 255, 0.5);
   animation: glow 2s ease-in-out infinite alternate;
   margin-left: 8%;
   margin-right: 8%;
@@ -23,7 +23,7 @@
   margin-bottom: 0%;
   background-color: #c2bbbb05;
   backdrop-filter: blur(15px);
-  -webkit-backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px); */
 }
 
 @keyframes glow {
@@ -57,7 +57,7 @@
 
 .alerta .right h4.parrafo {
   margin: 0; /* Elimina el margen superior */
-  line-height: 0px;
+  /* line-height: 0px; */
   font-size: 1rem;
   word-wrap: break-word;
   overflow-wrap: break-word;
@@ -65,8 +65,7 @@
   white-space: normal; /* Restaura el comportamiento de ajuste de línea */
   margin: 0; /* Elimina el margen superior e inferior */
   font-family: 'Rubik', sans-serif;
-  color: aqua;
-  
+  color: #EDB1B5;
 }
 
 .alerta .right h4.parrafo:not(:last-child) {
@@ -81,7 +80,7 @@
   margin-bottom: 1px; /* Agrega espacio inferior */
   white-space: normal; /* Restaura el comportamiento de ajuste de línea */
   font-family: 'Lobster Two', cursive;
-  color: #fff;
+  color: #505B80;
 }
 
 .alerta h4.parrafo {

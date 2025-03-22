@@ -12,6 +12,7 @@ animation: text-focus-in 1s cubic-bezier(0.55, 0.085, 0.68, 0.53) both;
 
 .nombreApp label {
     -webkit-background-clip: text;
+    background-clip: text;
     font-family: 'Cabin Sketch';
     padding: 10px;
     color: #505B80;
@@ -100,7 +101,7 @@ animation: text-focus-in 1s cubic-bezier(0.55, 0.085, 0.68, 0.53) both;
     border-radius: 1rem;
     border: none;
     position: relative;
-    background: #100720;
+    background: #E89CA1;
     transition: 0.1s;
     margin-top: 28px;
     font-family: 'Alfa Slab One', cursive;
@@ -115,7 +116,7 @@ animation: text-focus-in 1s cubic-bezier(0.55, 0.085, 0.68, 0.53) both;
     margin-right: 50%;
   }
 
-  .nuevoF::after {
+  /* .nuevoF::after {
     content: '';
     width: 100%;
     height: 100%;
@@ -131,4 +132,4 @@ animation: text-focus-in 1s cubic-bezier(0.55, 0.085, 0.68, 0.53) both;
     transform: scale(0.9) rotate(3deg);
     background: radial-gradient(circle farthest-corner at 10% 20%, rgba(255, 94, 247, 1) 17.8%, rgba(2, 245, 255, 1) 100.2%);
     transition: 0.5s;
-  }
+  } */
