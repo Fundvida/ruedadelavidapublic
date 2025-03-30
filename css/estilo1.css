@@ -104,7 +104,7 @@ background-color: rgb(84, 238, 133);}
 }
 /*======================================== */
 .app {
-    background: rgb(241, 239, 240);
+    background: #fff;
     width: 65rem;
     border-radius: 2.5rem;
 	border: 9px none;
@@ -187,7 +187,7 @@ background-color: rgb(84, 238, 133);}
 /*buttons*/
 #msform .action-button {
 	width: 100px;
-	background: #27AE60;
+	background: #E89CA1;
 	font-weight: bold;
 	color: white;
 	border: 0 none;
@@ -200,17 +200,17 @@ background-color: rgb(84, 238, 133);}
 }
 #msform .action-button:hover, 
 #msform .action-button:focus {
-	box-shadow: 0 0 0 2px white, 0 0 0 3px #27AE60;
+	/* box-shadow: 0 0 0 2px white, 0 0 0 3px #27AE60; */
 }
 /*headings*/
 .fs-title {
 	font-family: "Lucida Handwriting", cursive;
 	font-size: 25px;
 	/* text-transform: uppercase; todo mayuscula*/
-	color: #fca709;
+	color: #505B80;
 	margin-bottom: 2.5rem;
     
-    text-shadow: 1px 1px 1px #0a0000; 
+    text-shadow: 1px 1px 1px #505B80; 
 }
 .fs-subtitle {
 	font-weight: normal;

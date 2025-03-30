@@ -282,13 +282,13 @@ span {
   display: block;
   padding: 15px 0;
   margin-bottom: 40px;
-  border-bottom: 1px solid #009d71;
+  /* border-bottom: 1px solid #009d71; */
   color: #fff;
   font-family: "montserrat", arial, verdana;
   font: 40 3em;
   text-align: center;
   text-shadow: 0 2px 0 rgba(0, 0, 0, 0.15);
-  background: #009d71;
+  background: #E89CA1;
 }
 
 #resultadoE {
@@ -336,7 +336,7 @@ span .seccionResultadoAlto, .seccionResultadoBajo {
   left: 20px;
   right: 20px;
   bottom: 20px;
-  background-color: rgba(25, 198, 149, 0.9);
+  background-color: #505B80;
   border-radius: 4px;
   transform: rotateX(-90deg);
   opacity: 0;
@@ -406,13 +406,13 @@ span .seccionResultadoAlto, .seccionResultadoBajo {
 }
 
 #form-decision {
-  background: #009d71;
+  background: #E89CA1;
   font-family: "montserrat", arial, verdana;
   display: block;
   font-weight: bold;
   padding: 15px 0;
   margin-bottom: 35px;
-  border-bottom: 1px solid #009d71;
+  /* border-bottom: 1px solid #009d71; */
   color: #fff;
   font: 40 3em;
   text-align: center;
@@ -438,13 +438,13 @@ span {
 }
 
 #form-evaluacionFinal {
-  background: #009d71;
+  background: #E89CA1;
   font-family: "montserrat", arial, verdana;
   display: block;
   font-weight: bold;
   padding: 15px 0;
   margin-bottom: 35px;
-  border-bottom: 1px solid #009d71;
+  /* border-bottom: 1px solid #009d71; */
   color: #fff;
   font: 40 3em;
   text-align: center;
@@ -452,7 +452,7 @@ span {
 }
 
 #descripcion {
-  background: #df851f;
+  background: #505B80;
   display: block;
   padding: 12px;
   color: #fff;

@@ -65,7 +65,7 @@ animation: text-focus-in 1s cubic-bezier(0.55, 0.085, 0.68, 0.53) both;
     border-radius: 1rem;
     border: none;
     position: relative;
-    background: #100720;
+    background: #E89CA1;
     transition: 0.1s;
     margin-top: 28px;
     margin-left: 40px;
@@ -77,7 +77,7 @@ animation: text-focus-in 1s cubic-bezier(0.55, 0.085, 0.68, 0.53) both;
     content: '';
     width: 100%;
     height: 100%;
-    background-image: radial-gradient( circle farthest-corner at 10% 20%,  rgba(255,94,247,1) 17.8%, rgba(2,245,255,1) 100.2% );
+    /* background-image: radial-gradient( circle farthest-corner at 10% 20%,  rgba(255,94,247,1) 17.8%, rgba(2,245,255,1) 100.2% ); */
     filter: blur(15px);
     z-index: -1;
     position: absolute;
@@ -87,7 +87,7 @@ animation: text-focus-in 1s cubic-bezier(0.55, 0.085, 0.68, 0.53) both;
 
 .nuevoT:active {
     transform: scale(0.9) rotate(3deg);
-    background: radial-gradient( circle farthest-corner at 10% 20%,  rgba(255,94,247,1) 17.8%, rgba(2,245,255,1) 100.2% );
+    /* background: radial-gradient( circle farthest-corner at 10% 20%,  rgba(255,94,247,1) 17.8%, rgba(2,245,255,1) 100.2% ); */
     transition: 0.5s;
 }
 
@@ -102,10 +102,10 @@ animation: text-focus-in 1s cubic-bezier(0.55, 0.085, 0.68, 0.53) both;
     border: none;
     position: relative;
     background: #E89CA1;
-    transition: 0.1s;
+    /* transition: 0.1s; */
     margin-top: 28px;
     font-family: 'Alfa Slab One', cursive;
-    font-size: 1rem;
+    /* font-size: 1rem;
     align-items: center;
     justify-content: center;
     margin-bottom: 1rem;
@@ -113,7 +113,7 @@ animation: text-focus-in 1s cubic-bezier(0.55, 0.085, 0.68, 0.53) both;
     justify-content: center;
     align-items: center;
     margin-left: 45%;
-    margin-right: 50%;
+    margin-right: 50%; */
   }
 
   /* .nuevoF::after {
