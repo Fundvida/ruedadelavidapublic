@@ -1,0 +1,29 @@
+@import url('https://fonts.googleapis.com/css2?family=Anton&family=Dancing+Script:wght@400;500;600;700&family=Indie+Flower&family=Lilita+One&family=Rubik+Iso&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lilita+One&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Montserrat');
+
+:root {
+    --main-color: #84d3c7;
+    --black: #e3e1e1;
+    --bg: #f5f5f8;
+    --border: 0.1rem solid rgba(255, 255, 255, 0.952);
+    --primary-color: #009d71;
+    --secondary-color: #6c6cb9;
+    --button-color: #27AE60;
+    --button-hover-color: #53a764;
+    --text-color: #f3f3f3;
+    --color-primary: #505b80;
+    --color-secondary: #edb1b5;
+    --color-white: #FFFFFF;
+    --color-black: #000;
+    --color-grey-0: #f8f8f8;
+    --color-grey-1: #ecb0b4;
+    --color-grey-2: #ffcdce;
+    --color-grey-3: #e89ca1;
+    --color-grey-4: #454e56;
+    --color-grey-5: #2a2e35;
+    --color-grey-6: #12181b;
+    --color-grey-7: #fbf1f1;
+    --br-sm-2: 1.9rem;
+    --box-shadow-1: 0 3px 15px rgba(0, 0, 0, .3);
+}

@@ -1,0 +1,30 @@
+.diagonal-split {
+    display: flex;
+    background: linear-gradient(75deg, var(--color-secondary) 35%, var(--color-primary) 35%);
+    color: white;
+}
+
+.font-lilita-one {
+    font-family: 'Lilita One', cursive;
+}
+
+.font-poppins {
+    font-family: "Poppins", sans-serif;
+}
+
+.social-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 200px;
+    height: 200px;
+    border-radius: 16px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    color: white;
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.social-icon:hover {
+    transform: translateY(-5px);
+    box-shadow: 0px 8px 25px rgba(255, 255, 255, 0.4);
+}
