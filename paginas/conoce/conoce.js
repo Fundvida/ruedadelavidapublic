@@ -65,10 +65,10 @@ function updateSections() {
     sections.forEach((section) => {
         const div = document.createElement("div");
         div.className =
-            "p-6 rounded-lg shadow-xl ring-2 ring-gray-300 transition duration-300 hover:ring-4 hover:shadow-2xl hover:-translate-y-2";
+            "p-6 rounded-lg shadow-xl ring-2 ring-gray-300 bg-white transition duration-300 hover:ring-4 hover:shadow-2xl hover:-translate-y-2";
         div.innerHTML = `
-            <h3 class="text-4xl font-bold text-[#edb1b5] mb-2">${section.title}</h3>
-            <p class="text-xl text-gray-100 text-balance tracking-widest">${section.text}</p>
+            <h3 class="text-4xl font-bold text-[#edb1b5] text-center mb-2">${section.title}</h3>
+            <p class="text-2xl text-[#505b80] text-balance tracking-widest">${section.text}</p>
         `;
         container.appendChild(div);
     });

@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Anton&family=Dancing+Script:wght@400;500;600;700&family=Indie+Flower&family=Lilita+One&family=Rubik+Iso&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Cabin+Sketch&family=Lobster+Two&family=Miltonian+Tattoo&family=Press+Start+2P&display=swap");
 @import url('https://fonts.googleapis.com/css2?family=Lilita+One&display=swap');
 @import url('https://fonts.googleapis.com/css?family=Montserrat');
 
@@ -26,4 +27,35 @@
     --color-grey-7: #fbf1f1;
     --br-sm-2: 1.9rem;
     --box-shadow-1: 0 3px 15px rgba(0, 0, 0, .3);
+}
+
+.font-lilita-one {
+    font-family: 'Lilita One', cursive;
+}
+
+.font-poppins {
+    font-family: "Poppins", sans-serif;
+}
+
+.font-cabin-sketch {
+    font-family: 'Cabin Sketch';
+}
+
+.text-focus-in {
+    -webkit-animation: text-focus-in 1s cubic-bezier(0.55, 0.085, 0.68, 0.53) both;
+    animation: text-focus-in 1s cubic-bezier(0.55, 0.085, 0.68, 0.53) both;
+}
+
+@keyframes text-focus-in {
+    0% {
+        -webkit-filter: blur(12px);
+        filter: blur(12px);
+        opacity: 0;
+    }
+
+    100% {
+        -webkit-filter: blur(0px);
+        filter: blur(0px);
+        opacity: 1;
+    }
 }

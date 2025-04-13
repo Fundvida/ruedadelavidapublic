@@ -4,14 +4,6 @@
     color: white;
 }
 
-.font-lilita-one {
-    font-family: 'Lilita One', cursive;
-}
-
-.font-poppins {
-    font-family: "Poppins", sans-serif;
-}
-
 .social-icon {
     display: flex;
     align-items: center;
