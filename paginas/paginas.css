@@ -41,6 +41,14 @@
     font-family: 'Cabin Sketch';
 }
 
+.font-lobster-two {
+    font-family: 'Lobster Two', cursive;
+}
+
+.font-alfa-slab-one {
+    font-family: 'Alfa Slab One', cursive;
+}
+
 .text-focus-in {
     -webkit-animation: text-focus-in 1s cubic-bezier(0.55, 0.085, 0.68, 0.53) both;
     animation: text-focus-in 1s cubic-bezier(0.55, 0.085, 0.68, 0.53) both;

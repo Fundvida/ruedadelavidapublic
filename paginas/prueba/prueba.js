@@ -1,97 +1,76 @@
-import { cuestionarios, opciones } from "./prueba.data.js";
+import { botonesNavegacion } from './datos/navegacion.js';
 
-let indiceActual = 0;
-const respuestasUsuario = [];
+document.addEventListener('DOMContentLoaded', () => {
+    const navContainer = document.querySelector('.controls');
+    const contentContainer = document.getElementById('content');
+    let currentActiveButton = null;
+    let currentPageInitFunction = null; // Variable para almacenar la función de inicialización de la página actual
 
-function iniciarCuestionario() {
-    renderizarCuestionario();
-
-    const botonAnterior = document.getElementById("anteriorCuestionario");
-    const botonSiguiente = document.getElementById("siguienteCuestionario");
-
-    if (botonAnterior) {
-        botonAnterior.addEventListener("click", () => cambiarCuestionario(-1));
-        botonSiguiente.addEventListener("click", () => cambiarCuestionario(1));
-    }
-}
-
-function cambiarCuestionario(direccion) {
-    indiceActual += direccion;
-
-    // Limitar dentro del rango válido
-    if (indiceActual < 0) indiceActual = 0;
-    if (indiceActual >= cuestionarios.length) indiceActual = cuestionarios.length - 1;
-
-    // Ocultar botón de "Siguiente" si es el último cuestionario
-    document.getElementById("siguienteCuestionario").classList.toggle("hidden", indiceActual === cuestionarios.length - 1);
-
-    // Ocultar botón de "Anterior" si es el primer cuestionario
-    document.getElementById("anteriorCuestionario").classList.toggle("hidden", indiceActual === 0);
-
-    renderizarCuestionario();
-}
-
-
-function renderizarCuestionario() {
-    const tablaCuerpo = document.getElementById("tablaCuerpo");
-    const titulo = document.getElementById("tituloCuestionario");
-
-    if (!tablaCuerpo) return;
-
-    titulo.innerText = cuestionarios[indiceActual].titulo;
-    tablaCuerpo.innerHTML = "";
-    respuestasUsuario[indiceActual] = {};
-
-    cuestionarios[indiceActual].preguntas.forEach((pregunta, indicePregunta) => {
-        const fila = document.createElement("tr");
-        fila.innerHTML = `<td class="p-4 border border-gray-600 text-center">${pregunta}</td>`;
-
-        opciones.forEach((opcion, indiceOpcion) => {
-            const celda = document.createElement("td");
-            celda.className = "p-4 border border-gray-600 text-center cursor-pointer hover:bg-gray-300";
-            celda.dataset.pregunta = indicePregunta;
-            celda.dataset.opcion = indiceOpcion;
-
-            celda.innerHTML = `<span>${opcion.texto}</span>`;
-
-            celda.addEventListener("click", () => {
-                document.querySelectorAll(`td[data-pregunta="${indicePregunta}"]`).forEach(celda => {
-                    celda.classList.remove("bg-[#E89CA1]", "text-white");
-                });
-
-                celda.classList.add("bg-[#E89CA1]", "text-white");
-
-                respuestasUsuario[indiceActual][pregunta] = {
-                    opcion: opcion.texto,
-                    puntaje: opcion.puntaje
-                };
-
-                validarRespuestas();
+    function renderNavButtons() {
+        botonesNavegacion.forEach((boton, index) => {
+            const button = document.createElement('div');
+            button.className = `p-4 cursor-pointer w-14 h-14 rounded-full flex justify-center items-center m-3 bg-[#454e56] text-gray-200`;
+            button.innerHTML = `<i class="${boton.icono}"></i>`;
+            button.dataset.page = boton.pagina;
+            button.addEventListener('click', () => {
+                loadPage(boton.pagina, boton.init); // Pasar la función de inicialización
+                selectButton(button);
             });
 
-            fila.appendChild(celda);
+            navContainer.appendChild(button);
+
+            if (index === 0) {
+                selectButton(button);
+                loadPage(boton.pagina, botonesNavegacion[0].init); // Pasar la función de inicialización inicial
+            }
         });
-
-        tablaCuerpo.appendChild(fila);
-    });
-}
-
-async function loadPage(page) {
-    const container = document.getElementById("content");
-
-    try {
-        const response = await fetch(page);
-        const data = await response.text();
-        container.innerHTML = data; // Inserta el contenido dinámicamente
-        iniciarCuestionario();
-    } catch (error) {
-        console.error("Error al cargar el contenido:", error);
-        container.innerHTML = "<p class='text-red-500 text-center'>Error al cargar contenido.</p>";
     }
-}
 
-// Llamar a la función con la página que quieres renderizar dentro
-document.addEventListener("DOMContentLoaded", () => {
-    loadPage("prueba-encuesta.html");
+    function loadPage(pageUrl, initFunction) {
+        contentContainer.classList.add('blur-sm', 'translate-y-4');
+        currentPageInitFunction = initFunction; // Almacenar la función de inicialización para llamar después
+
+        setTimeout(() => {
+            fetch(pageUrl)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.text();
+                })
+                .then(html => {
+                    contentContainer.innerHTML = html;
+                    contentContainer.classList.remove('blur-sm', 'translate-y-4');
+                    contentContainer.classList.add('translate-y-0');
+
+                    // Llamar a la función de inicialización de la página actual si existe
+                    if (currentPageInitFunction) {
+                        currentPageInitFunction();
+                        currentPageInitFunction = null; // Limpiar después de llamar
+                    }
+                })
+                .catch(error => {
+                    console.error('Error al cargar la página:', error);
+                    contentContainer.innerHTML = `
+                        <div style="display: flex; justify-content: center; align-items: center; height: 100px; color: red; font-weight: bold; font-size: 1.2em;">
+                            Error al cargar el contenido.
+                        </div>
+                    `;
+                    contentContainer.classList.remove('blur-sm', 'translate-y-4');
+                    contentContainer.classList.add('translate-y-0');
+                });
+        }, 300);
+    }
+
+    function selectButton(button) {
+        if (currentActiveButton) {
+            currentActiveButton.classList.remove('bg-[#e89ca1]', 'text-white');
+            currentActiveButton.classList.add('bg-[#454e56]', 'text-gray-200');
+        }
+        button.classList.remove('bg-[#454e56]', 'text-gray-200');
+        button.classList.add('bg-[#e89ca1]', 'text-white');
+        currentActiveButton = button;
+    }
+
+    renderNavButtons();
 });
-

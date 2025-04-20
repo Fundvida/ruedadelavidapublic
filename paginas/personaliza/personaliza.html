@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Rueda de la vida</title>
+    <link rel="shortcut icon" href="/imagenes/icon/colorwheel_23714.ico" type="image/x-icon" />
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
+    <link href="../paginas.css" rel="stylesheet" />
+</head>
+
+<body class="font-poppins">
+    <div class="container mx-auto px-4">
+        <div class="flex justify-between items-center py-3">
+            <a href="/index.html"
+                class="flex justify-center items-center shadow rounded-full bg-[#e89ca1] w-14 h-14 text-white">
+                <i class="fa-solid fa-house-chimney"></i>
+            </a>
+        </div>
+
+        <div class="text-center px-5">
+            <h1 class="text-center text-[80px] font-bold text-[#505B80] font-cabin-sketch text-focus-in">
+                RUEDA DE LA VIDA
+            </h1>
+            <label
+                class="text-[#E89CA1] flex justify-center items-center p-2 mx-[10%] text-4xl bg-[#fbf1f1] rounded-lg font-lilita-one">
+                PERSONALIZA TU PRUEBA
+            </label>
+        </div>
+
+        <div class="my-15 flex flex-col items-center">
+            <div class="flex">
+                <script src="https://cdn.lordicon.com/bhenfmcm.js"></script>
+                <lord-icon src="https://cdn.lordicon.com/reybmpdc.json" trigger="hover"
+                    colors="primary:#EDB1B5,secondary:#ffc738,tertiary:#ffffff,quaternary:#505B80,quinary:#505B80"
+                    style="width: 250px; height: 250px">
+                </lord-icon>
+                <div class="text-xl">
+                    <p class="mb-15 text-3xl text-[#505B80] font-lobster-two"
+                        style="text-shadow: rgba(0, 0, 0, 0.35) 0px 6px 18px;">
+                        Recuerda que si no trabajas, es importante eliminar las secciones de trabajo y economía.
+                    </p>
+                    <p class="font-semibold text-center text-[#EDB1B5]">Escoge 8 áreas para comenzar tu
+                        prueba:</p>
+                </div>
+            </div>
+
+            <div class="overflow-auto rounded-lg w-full sm:w-3/4 lg:w-1/2 px-8 py-5"
+                style="box-shadow: 0 0 15px 1px #505B80;">
+                <table class="min-w-full leading-normal text-center">
+                    <thead class="text-gray-700 uppercase border-b-2 border-gray-300">
+                        <tr>
+                            <th scope="col" class="px-6 py-3 text-lg font-bold">#</th>
+                            <th scope="col" class="px-6 py-3 text-lg font-bold text-start">SECCIONES</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbody_secciones">
+                    </tbody>
+                </table>
+            </div>
+
+            <button type="button" id="btn_save_changes"
+                class="w-40 h-14 cursor-pointer text-white rounded-xl border-none bg-[#E89CA1] mt-7 px-4 font-alfa-slab-one">
+                INICIAR PRUEBA
+            </button>
+
+            <div id="alert-container" class="mt-4">
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="./personaliza.js"></script>
+</body>
+
+</html>
