@@ -27,6 +27,8 @@ function iniciarCuestionario() {
         cuestionariosFiltrados = cuestionarios;
     }
 
+    localStorage.setItem('cuestionariosFiltrados', JSON.stringify(cuestionariosFiltrados));
+
     tituloCuestionario = document.getElementById('tituloCuestionario');
     tablaCuerpo = document.getElementById('tablaCuerpo');
     botonAnterior = document.getElementById('anteriorCuestionario');
@@ -35,31 +37,54 @@ function iniciarCuestionario() {
     filaPreguntaAdicional = document.getElementById('filaPreguntaAdicional');
     preguntaAdicionalUsuarioInput = document.getElementById('preguntaAdicionalUsuario');
 
-    if (!tituloCuestionario || !tablaCuerpo || !filaPreguntaAdicional) {
+    if (!tituloCuestionario || !tablaCuerpo || !filaPreguntaAdicional || !botonAnterior || !botonSiguiente || !botonFinalizar) {
         console.error('Elementos del cuestionario no encontrados en el DOM.');
         return;
     }
 
-    renderizarCuestionario();
-    actualizarBotones();
+    // Remover listeners existentes para evitar duplicados
+    botonAnterior.removeEventListener("click", cambiarCuestionarioAnterior);
+    botonSiguiente.removeEventListener("click", cambiarCuestionarioSiguiente);
+    botonFinalizar.removeEventListener("click", reiniciarCuestionario);
 
-    if (!eventosAdjuntados) {
-        if (botonAnterior) {
-            botonAnterior.addEventListener("click", () => cambiarCuestionario(-1));
-        }
-        if (botonSiguiente) {
-            botonSiguiente.addEventListener("click", () => cambiarCuestionario(1));
-        }
-        if (botonFinalizar) {
-            botonFinalizar.addEventListener("click", reiniciarCuestionario);
-        }
-        eventosAdjuntados = true;
-    }
+    // Adjuntar los listeners NUEVAMENTE cada vez que se inicia el cuestionario
+    botonAnterior.addEventListener("click", cambiarCuestionarioAnterior);
+    botonSiguiente.addEventListener("click", cambiarCuestionarioSiguiente);
+    botonFinalizar.addEventListener("click", reiniciarCuestionario);
 
     if (preguntaAdicionalUsuarioInput) {
+        preguntaAdicionalUsuarioInput.removeEventListener('input', manejarCambioPreguntaAdicional);
         preguntaAdicionalUsuarioInput.addEventListener('input', manejarCambioPreguntaAdicional);
+        // Restaurar la pregunta adicional si existe para la sección actual
+        if (respuestasUsuario[indiceActual] && respuestasUsuario[indiceActual]['preguntaAdicional']) {
+            preguntaAdicionalUsuarioInput.value = respuestasUsuario[indiceActual]['preguntaAdicional'].pregunta;
+            const opcionesAdicionalesCeldas = filaPreguntaAdicional.querySelectorAll('.opciones-adicionales');
+            opcionesAdicionalesCeldas.forEach(celda => {
+                if (respuestasUsuario[indiceActual]['preguntaAdicional'].opcion && celda.dataset.opcionTexto === respuestasUsuario[indiceActual]['preguntaAdicional'].opcion) {
+                    seleccionarOpcionAdicional.call(celda);
+                }
+            });
+        } else {
+            preguntaAdicionalUsuarioInput.value = "";
+            deshabilitarOpcionesAdicionales();
+            respuestaAdicionalUsuario = null;
+        }
+    } else {
+        respuestaAdicionalUsuario = null;
+        deshabilitarOpcionesAdicionales();
     }
-    deshabilitarOpcionesAdicionales();
+
+    renderizarCuestionario();
+    actualizarBotones();
+}
+
+// Definir las funciones listener por separado para poder removerlas
+function cambiarCuestionarioAnterior() {
+    cambiarCuestionario(-1);
+}
+
+function cambiarCuestionarioSiguiente() {
+    cambiarCuestionario(1);
 }
 
 function deshabilitarOpcionesAdicionales() {
@@ -116,6 +141,21 @@ function seleccionarOpcionAdicional() {
 }
 
 function cambiarCuestionario(direccion) {
+    // Guardar la respuesta adicional si existe
+    if (preguntaAdicionalUsuarioInput && preguntaAdicionalUsuarioInput.value.trim() !== "") {
+        const pregunta = preguntaAdicionalUsuarioInput.value.trim();
+        respuestasUsuario[indiceActual]['preguntaAdicional'] = {
+            pregunta: pregunta,
+            opcion: respuestaAdicionalUsuario ? respuestaAdicionalUsuario.opcion : null,
+            puntaje: respuestaAdicionalUsuario ? respuestaAdicionalUsuario.puntaje : null
+        };
+    } else if (respuestasUsuario[indiceActual] && respuestasUsuario[indiceActual]['preguntaAdicional']) {
+        delete respuestasUsuario[indiceActual]['preguntaAdicional']; // Eliminar si se borra la pregunta
+    }
+
+    // Guardar las respuestas del cuestionario actual
+    localStorage.setItem('respuestasUsuario', JSON.stringify(respuestasUsuario));
+
     indiceActual += direccion;
     actualizarBotones();
     renderizarCuestionario();
@@ -189,6 +229,7 @@ function reiniciarCuestionario() {
     indiceActual = 0;
     respuestasUsuario.length = 0;
     respuestaAdicionalUsuario = null;
+    localStorage.removeItem('respuestasUsuario'); // Limpiar las respuestas al reiniciar
     iniciarCuestionario(); // Volver a iniciar para re-filtrar o mostrar todo
     actualizarBotones();
     if (preguntaAdicionalUsuarioInput) {

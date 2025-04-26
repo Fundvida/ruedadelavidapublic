@@ -1,5 +1,7 @@
 import { iniciarCuestionario } from "../contenido/encuesta/encuesta.js";
 import { inicializarResultados } from '../contenido/resultado/resultado.js';
+import { inicializarReflexion } from '../contenido/reflexion/reflexion.js';
+import { inicializarPlan } from '../contenido/plan/plan.js';
 
 export const botonesNavegacion = [
     {
@@ -11,19 +13,19 @@ export const botonesNavegacion = [
     {
         texto: "Resultado",
         pagina: "contenido/resultado/resultado.html",
-        icono: "fa-solid fa-chart-bar",
-        init: inicializarResultados
+        icono: "fa-solid fa-chart-pie",
+        init: inicializarResultados,
     },
-    // {
-    //     texto: "Reflexión",
-    //     pagina: "contenido/reflexion/reflexion.html",
-    //     icono: "fa-solid fa-comments",
-    //     init: null,
-    // },
-    // {
-    //     texto: "Plan",
-    //     pagina: "contenido/plan/plan.html",
-    //     icono: "fa-solid fa-tasks",
-    //     init: null,
-    // },
+    {
+        texto: "Reflexión",
+        pagina: "contenido/reflexion/reflexion.html",
+        icono: "fa-solid fa-chart-bar",
+        init: inicializarReflexion,
+    },
+    {
+        texto: "Plan",
+        pagina: "contenido/plan/plan.html",
+        icono: "fa-solid fa-calendar-check",
+        init: inicializarPlan,
+    },
 ];
