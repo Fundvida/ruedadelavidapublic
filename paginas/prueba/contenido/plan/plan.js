@@ -1,159 +1,280 @@
-import actividadesPorArea from './plan.data.js';
+import actividadesPorArea from '../../datos/plan.data.js';
+
 
 function inicializarPlan() {
-    console.log('Función de inicialización del Plan llamada.');
-
+    localStorage.removeItem('actividadesGuardadas');
     const seleccionArea = document.getElementById('seleccion-area');
     const listaActividades = document.getElementById('lista-actividades');
     const agregarActividadBoton = document.getElementById('agregar-actividad');
-    const mensajeSeleccionaArea = document.createElement('p');
-    mensajeSeleccionaArea.className = 'text-gray-700 mb-4';
-    mensajeSeleccionaArea.textContent = 'Por favor, selecciona un área para comenzar a planificar tus actividades.';
+    const guardarActividadBoton = document.getElementById('guardar-actividad');
+    const contenedorActividades = document.getElementById('contenedor-actividades');
 
     const cuestionariosFiltrados = JSON.parse(localStorage.getItem('cuestionariosFiltrados')) || [];
     let numActividades = 0;
     const actividadesSeleccionadas = {};
 
-    // Limpiar el contenedor de actividades inicialmente
-    listaActividades.innerHTML = '';
-    listaActividades.appendChild(mensajeSeleccionaArea);
+    // Inicialización de la interfaz
+    contenedorActividades.innerHTML = '';
     agregarActividadBoton.disabled = true;
 
-    // Llenar el combo de selección de área
+    // Llenar el combo de áreas
     cuestionariosFiltrados.forEach(area => {
         const opcion = document.createElement('option');
-        opcion.value = area.titulo;
+        opcion.value = area.numeroSeccion;
         opcion.textContent = area.titulo;
         seleccionArea.appendChild(opcion);
     });
 
-    function actualizarOpcionesActividad(filaIndex, areaSeleccionada) {
-        const actividadSelect = document.getElementById(`actividad-${filaIndex}`);
-        if (actividadSelect) {
-            const valorActual = actividadSelect.value;
-            actividadSelect.innerHTML = '<option value="">Selecciona una actividad</option>';
-            if (areaSeleccionada && actividadesPorArea[areaSeleccionada]) {
-                const actividadesDisponibles = actividadesPorArea[areaSeleccionada].filter(actividad =>
-                    !Object.values(actividadesSeleccionadas).flat().includes(actividad) || actividad === valorActual
-                );
-                actividadesDisponibles.forEach(actividad => {
-                    const opcion = document.createElement('option');
-                    opcion.value = actividad;
-                    opcion.textContent = actividad;
-                    actividadSelect.appendChild(opcion);
+    function obtenerActividadesArea(numeroSeccion) {
+        const area = actividadesPorArea.find(area => area.numeroSeccion === parseInt(numeroSeccion));
+        return area ? area.actividades : [];
+    }
+
+    function crearNuevaFilaActividad(areaSeleccionada) {
+        const numeroSeccion = parseInt(areaSeleccionada);
+        const actividadesArea = obtenerActividadesArea(numeroSeccion);
+
+        if (actividadesArea.length && numActividades < 10) {
+            const nuevaFila = document.createElement('div');
+            nuevaFila.id = `actividad-fila-${numActividades}`;
+            nuevaFila.className = 'grid grid-cols-[1fr_1fr_1fr_auto] gap-4 mb-4 items-center';
+
+            nuevaFila.innerHTML = `
+            <div>
+                <select id="actividad-${numActividades}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline actividad-select">
+                    <option value="">Selecciona una actividad</option>
+                    ${actividadesArea
+                    .map(actividad => `<option value="${actividad}">${actividad}</option>`)
+                    .join('')}
+                </select>
+            </div>
+            <div>
+                <input type="date" id="fecha-inicio-${numActividades}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline fecha-inicio">
+            </div>
+            <div>
+                <input type="date" id="fecha-fin-${numActividades}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline fecha-fin">
+            </div>
+             <div class="flex justify-center">
+                <button class="delete-activity cursor-pointer" data-id="${numActividades}">
+                    <i class="fas fa-trash-alt"></i>
+                </button>
+            </div>`;
+
+            contenedorActividades.appendChild(nuevaFila);
+
+            const deleteButton = nuevaFila.querySelector('.delete-activity');
+            if (deleteButton) {
+                deleteButton.addEventListener('click', function () {
+                    const id = this.getAttribute('data-id');
+                    eliminarActividad(parseInt(id));
                 });
-                actividadSelect.value = valorActual;
+            }
+
+            const fechaInicio = nuevaFila.querySelector(`#fecha-inicio-${numActividades}`);
+            const fechaFin = nuevaFila.querySelector(`#fecha-fin-${numActividades}`);
+
+            // Agregar validación de fechas
+            fechaInicio.addEventListener('change', () => {
+                fechaFin.min = fechaInicio.value;
+                if (fechaFin.value && fechaFin.value < fechaInicio.value) {
+                    fechaFin.value = fechaInicio.value;
+                }
+            });
+
+            fechaFin.addEventListener('change', () => {
+                if (fechaInicio.value && fechaFin.value < fechaInicio.value) {
+                    alert('La fecha de fin no puede ser anterior a la fecha de inicio');
+                    fechaFin.value = fechaInicio.value;
+                }
+            });
+
+            actualizarOpcionesActividad(numActividades, areaSeleccionada);
+            numActividades++;
+        } else {
+            if (numActividades >= 10) {
+                alert('Solo puedes agregar hasta 10 actividades.');
             }
         }
     }
 
-    function crearNuevaFilaActividad(areaSeleccionada) {
-        if (numActividades < 10) {
-            const nuevaFila = document.createElement('div');
-            nuevaFila.id = `actividad-fila-${numActividades}`;
-            nuevaFila.className = 'grid grid-cols-3 gap-4 mb-4';
+    function eliminarActividad(filaIndex) {
+        const fila = document.getElementById(`actividad-fila-${filaIndex}`);
+        if (fila) {
+            // Obtener el select de actividad antes de eliminar la fila
+            const select = fila.querySelector('.actividad-select');
+            if (select && select.value) {
+                // Eliminar la actividad de las seleccionadas
+                delete actividadesSeleccionadas[filaIndex];
+            }
 
-            nuevaFila.innerHTML = `
-                <div>
-                    <label for="actividad-${numActividades}" class="block text-gray-700 text-sm font-bold mb-2">Actividad:</label>
-                    <select id="actividad-${numActividades}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline actividad-select">
-                        <option value="">Selecciona una actividad</option>
-                    </select>
-                </div>
-                <div>
-                    <label for="fecha-inicio-${numActividades}" class="block text-gray-700 text-sm font-bold mb-2">Fecha Inicio:</label>
-                    <input type="date" id="fecha-inicio-${numActividades}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline fecha-inicio">
-                </div>
-                <div>
-                    <label for="fecha-fin-${numActividades}" class="block text-gray-700 text-sm font-bold mb-2">Fecha Fin:</label>
-                    <input type="date" id="fecha-fin-${numActividades}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline fecha-fin">
-                </div>
-            `;
-            listaActividades.appendChild(nuevaFila);
-            actualizarOpcionesActividad(numActividades, areaSeleccionada);
-            numActividades++;
-        } else {
-            alert('Solo puedes agregar hasta 10 actividades.');
-        }
-    }
+            // Eliminar la fila
+            fila.remove();
 
-    function handleAreaChange(event) {
-        const areaSeleccionada = event.target.value;
-        if (areaSeleccionada) {
-            agregarActividadBoton.disabled = false;
-        } else {
-            agregarActividadBoton.disabled = true;
-        }
-        // Limpiar las actividades existentes y el rastreo al cambiar de área
-        listaActividades.innerHTML = '';
-        listaActividades.appendChild(mensajeSeleccionaArea);
-        numActividades = 0;
-        Object.keys(actividadesSeleccionadas).forEach(key => delete actividadesSeleccionadas[key]);
-    }
-
-    function handleAgregarActividad() {
-        const areaSeleccionada = seleccionArea.value;
-        if (areaSeleccionada) {
-            crearNuevaFilaActividad(areaSeleccionada);
-        } else {
-            alert('Por favor, selecciona un área antes de agregar una actividad.');
-        }
-    }
-
-    function handleActividadChange(event) {
-        if (event.target.classList.contains('actividad-select')) {
-            const filaIndex = event.target.id.split('-')[1];
-            const actividadSeleccionada = event.target.value;
-            actividadesSeleccionadas[filaIndex] = [actividadSeleccionada];
-            // No necesitamos actualizar la disponibilidad inmediatamente aquí,
-            // se actualizará cuando se cambie el área o se agregue una nueva actividad.
+            // Actualizar las actividades disponibles
             actualizarDisponibilidadActividades();
         }
     }
 
     function actualizarDisponibilidadActividades() {
-        document.querySelectorAll('.actividad-select').forEach(select => {
+        const actividadesSelects = document.querySelectorAll('.actividad-select');
+        const areaSeleccionada = seleccionArea.value;
+
+        if (!areaSeleccionada) return;
+
+        actividadesSelects.forEach(select => {
             const filaIndex = select.id.split('-')[1];
-            const valorActual = select.value;
-            select.innerHTML = '<option value="">Selecciona una actividad</option>';
-            if (seleccionArea.value && actividadesPorArea[seleccionArea.value]) {
-                const actividadesDisponibles = actividadesPorArea[seleccionArea.value].filter(actividad =>
-                    !Object.values(actividadesSeleccionadas).flat().includes(actividad) || actividad === valorActual
-                );
-                actividadesDisponibles.forEach(actividad => {
-                    const opcion = document.createElement('option');
-                    opcion.value = actividad;
-                    opcion.textContent = actividad;
-                    select.appendChild(opcion);
-                });
-                select.value = valorActual;
+            if (filaIndex) {
+                actualizarOpcionesActividad(filaIndex, areaSeleccionada);
             }
         });
     }
 
-    // Event Listeners con funciones separadas y remoción (aunque DOMContentLoaded solo se ejecuta una vez por carga de página)
-    const areaChangeListener = (event) => {
-        handleAreaChange(event);
-    };
-    seleccionArea.addEventListener('change', areaChangeListener);
+    function actualizarOpcionesActividad(filaIndex, areaSeleccionada) {
+        const actividadSelect = document.getElementById(`actividad-${filaIndex}`);
+        if (!actividadSelect) return;
 
-    const agregarActividadListener = () => {
-        handleAgregarActividad();
-    };
-    agregarActividadBoton.addEventListener('click', agregarActividadListener);
+        const valorActual = actividadSelect.value;
+        const numeroSeccion = parseInt(areaSeleccionada);
+        const actividadesArea = actividadesPorArea.find(area => area.numeroSeccion === numeroSeccion);
 
-    const actividadChangeListener = (event) => {
-        handleActividadChange(event);
-    };
-    listaActividades.addEventListener('change', actividadChangeListener);
+        if (actividadesArea) {
+            const actividadesDisponibles = actividadesArea.actividades.filter(actividad =>
+                !Object.values(actividadesSeleccionadas).flat().includes(actividad) ||
+                actividad === valorActual
+            );
 
-    // Cargar actividades guardadas (si las hay) - Pendiente de implementación detallada
-    const planGuardado = localStorage.getItem('planDeAccion');
-    if (planGuardado) {
-        const plan = JSON.parse(planGuardado);
-        console.log('Plan guardado:', plan);
-        // Aquí iría la lógica para reconstruir la interfaz con el plan guardado
+            actividadSelect.innerHTML = '<option value="">Selecciona una actividad</option>' +
+                actividadesDisponibles.map(actividad =>
+                    `<option value="${actividad}">${actividad}</option>`
+                ).join('');
+
+            actividadSelect.value = valorActual;
+        }
     }
+
+    function mostrarAlerta(mensaje) {
+    const alertContainer = document.getElementById("alert-container"); // Asegúrate de tener un contenedor con este ID en tu HTML
+    alertContainer.innerHTML = `
+        <div class="bg-red-100 border border-red-200 text-red-700 pl-5 pr-10 py-3 rounded relative" role="alert">
+            <span class="block sm:inline">${mensaje}</span>
+            <button type="button" class="absolute top-0 bottom-0 right-0 px-4 py-3" onclick="this.parentNode.remove()">
+                <i class="fas fa-times text-red-800 text-2xl cursor-pointer"></i>
+            </button>
+        </div>
+    `;
+}
+
+    function guardarActividades() {
+    const actividades = [];
+    const filas = document.querySelectorAll('#contenedor-actividades > div');
+
+    filas.forEach(fila => {
+        const actividad = fila.querySelector('.actividad-select').value;
+        const fechaInicio = fila.querySelector('.fecha-inicio').value;
+        const fechaFin = fila.querySelector('.fecha-fin').value;
+        const area = seleccionArea.options[seleccionArea.selectedIndex].text; // Obtener el área seleccionada
+
+        if (actividad && fechaInicio && fechaFin) {
+            actividades.push({ area, actividad, fechaInicio, fechaFin });
+        }
+    });
+
+    if (actividades.length > 0) {
+        // Obtener las actividades existentes en localStorage
+        const actividadesGuardadas = JSON.parse(localStorage.getItem('actividadesGuardadas')) || [];
+
+        // Combinar las nuevas actividades con las existentes
+        const nuevasActividades = [...actividadesGuardadas, ...actividades];
+
+        // Guardar todas las actividades en localStorage
+        localStorage.setItem('actividadesGuardadas', JSON.stringify(nuevasActividades));
+
+        // Mostrar la tabla con todas las actividades guardadas
+        mostrarTablaActividades();
+    } else {
+        mostrarAlerta('Debes elegir una fecha para la actividad.');
+    }
+}
+
+    function mostrarTablaActividades(actividades) {
+        // Obtener las actividades guardadas del localStorage
+        const actividadesGuardadas = JSON.parse(localStorage.getItem('actividadesGuardadas')) || [];
+
+    // Eliminar cualquier tabla existente antes de crear una nueva
+    const tablaExistente = document.querySelector('#tabla-actividades');
+    if (tablaExistente) {
+        tablaExistente.remove();
+    }
+
+    // Crear la tabla
+    const tabla = document.createElement('table');
+    tabla.id = 'tabla-actividades'; // Asignar un ID para evitar duplicados
+    tabla.className = 'w-full mt-4 border-collapse border border-gray-300';
+
+    const encabezado = `
+        <thead>
+            <tr>
+                <th class="border border-gray-300 px-4 py-2">Área</th>
+                <th class="border border-gray-300 px-4 py-2">Actividad</th>
+                <th class="border border-gray-300 px-4 py-2">Fecha Inicio</th>
+                <th class="border border-gray-300 px-4 py-2">Fecha Final</th>
+            </tr>
+        </thead>
+    `;
+
+    const cuerpo = actividadesGuardadas.map(act => `
+        <tr>
+            <td class="border border-gray-300 px-4 py-2">${act.area}</td>
+            <td class="border border-gray-300 px-4 py-2">${act.actividad}</td>
+            <td class="border border-gray-300 px-4 py-2">${act.fechaInicio}</td>
+            <td class="border border-gray-300 px-4 py-2">${act.fechaFin}</td>
+        </tr>
+    `).join('');
+
+    tabla.innerHTML = encabezado + `<tbody>${cuerpo}</tbody>`;
+
+    // Agregar la tabla al DOM
+    listaActividades.appendChild(tabla);
+}
+    // Mostrar la tabla al cargar la página
+    document.addEventListener('DOMContentLoaded', mostrarTablaActividades);
+
+
+    // Manejador del botón "Guardar Actividades"
+    guardarActividadBoton.addEventListener('click', guardarActividades);
+
+    // Manejadores de eventos
+    seleccionArea.addEventListener('change', (event) => {
+        const areaSeleccionada = event.target.value;
+        agregarActividadBoton.disabled = !areaSeleccionada;
+        if (areaSeleccionada) {
+            contenedorActividades.innerHTML = '';
+            numActividades = 0;
+            Object.keys(actividadesSeleccionadas).forEach(key => delete actividadesSeleccionadas[key]);
+        }
+    });
+
+    agregarActividadBoton.addEventListener('click', () => {
+        if (seleccionArea.value) {
+            crearNuevaFilaActividad(seleccionArea.value);
+        } else {
+            alert('Por favor, selecciona un área antes de agregar una actividad.');
+        }
+    });
+
+    listaActividades.addEventListener('change', (event) => {
+        if (!event.target.classList.contains('actividad-select')) return;
+
+        const filaIndex = event.target.id.split('-')[1];
+        const actividadSeleccionada = event.target.value;
+
+        if (actividadSeleccionada) {
+            actividadesSeleccionadas[filaIndex] = [actividadSeleccionada];
+            actualizarDisponibilidadActividades();
+        } else {
+            delete actividadesSeleccionadas[filaIndex];
+        }
+    });
 }
 
 export { inicializarPlan };

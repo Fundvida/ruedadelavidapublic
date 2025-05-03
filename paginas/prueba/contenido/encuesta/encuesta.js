@@ -1,4 +1,5 @@
 import { cuestionarios, opciones } from '../../datos/prueba.data.js';
+import { inicializarResultados } from '../../contenido/resultado/resultado.js';
 
 let indiceActual = 0;
 const respuestasUsuario = [];
@@ -27,6 +28,13 @@ function iniciarCuestionario() {
         cuestionariosFiltrados = cuestionarios;
     }
 
+    // Inicializa todas las áreas para asegurar que existan aunque no se visiten
+    for (let i = 0; i < cuestionariosFiltrados.length; i++) {
+        if (!respuestasUsuario[i]) {
+            respuestasUsuario[i] = {};
+        }
+    }
+
     localStorage.setItem('cuestionariosFiltrados', JSON.stringify(cuestionariosFiltrados));
 
     tituloCuestionario = document.getElementById('tituloCuestionario');
@@ -45,12 +53,12 @@ function iniciarCuestionario() {
     // Remover listeners existentes para evitar duplicados
     botonAnterior.removeEventListener("click", cambiarCuestionarioAnterior);
     botonSiguiente.removeEventListener("click", cambiarCuestionarioSiguiente);
-    botonFinalizar.removeEventListener("click", reiniciarCuestionario);
+    botonFinalizar.removeEventListener("click", finalizarCuestionario);
 
     // Adjuntar los listeners NUEVAMENTE cada vez que se inicia el cuestionario
     botonAnterior.addEventListener("click", cambiarCuestionarioAnterior);
     botonSiguiente.addEventListener("click", cambiarCuestionarioSiguiente);
-    botonFinalizar.addEventListener("click", reiniciarCuestionario);
+    botonFinalizar.addEventListener("click", finalizarCuestionario);
 
     if (preguntaAdicionalUsuarioInput) {
         preguntaAdicionalUsuarioInput.removeEventListener('input', manejarCambioPreguntaAdicional);
@@ -179,7 +187,11 @@ function renderizarCuestionario() {
     tituloCuestionario.innerText = cuestionariosFiltrados[indiceActual].titulo;
     const filasExistentes = tablaCuerpo.querySelectorAll('tr:not(#filaPreguntaAdicional)');
     filasExistentes.forEach(fila => fila.remove());
-    respuestasUsuario[indiceActual] = {};
+
+    // Solo inicializa si no existe
+    if (!respuestasUsuario[indiceActual]) {
+        respuestasUsuario[indiceActual] = {};
+    }
 
     const opcionesAdicionalesCeldas = filaPreguntaAdicional.querySelectorAll('.opciones-adicionales');
     opcionesAdicionalesCeldas.forEach(celda => {
@@ -206,6 +218,12 @@ function renderizarCuestionario() {
             celda.dataset.opcion = indiceOpcion;
 
             celda.innerHTML = `<span>${opcion.texto}</span>`;
+
+             // Restaurar la selección si ya existe una respuesta guardada
+            const respuestaGuardada = respuestasUsuario[indiceActual][pregunta];
+            if (respuestaGuardada && respuestaGuardada.opcion === opcion.texto) {
+                celda.classList.add("bg-[#E89CA1]", "text-white");
+            }
 
             celda.addEventListener("click", () => {
                 document.querySelectorAll(`td[data-pregunta="${indicePregunta}"]`).forEach(celda => {
@@ -236,6 +254,49 @@ function reiniciarCuestionario() {
         preguntaAdicionalUsuarioInput.value = "";
     }
     deshabilitarOpcionesAdicionales();
+}
+
+function finalizarCuestionario() {
+    // Supón que tienes un array de respuestas con área y valor
+    // Ejemplo: [{ area: "Salud", valor: 7 }, { area: "Trabajo", valor: 5 }, ...]
+    // const respuestas = obtenerRespuestasUsuario(); // Implementa esta función según tu lógica
+    if (preguntaAdicionalUsuarioInput && preguntaAdicionalUsuarioInput.value.trim() !== "") {
+        const pregunta = preguntaAdicionalUsuarioInput.value.trim();
+        respuestasUsuario[indiceActual]['preguntaAdicional'] = {
+            pregunta: pregunta,
+            opcion: respuestaAdicionalUsuario ? respuestaAdicionalUsuario.opcion : null,
+            puntaje: respuestaAdicionalUsuario ? respuestaAdicionalUsuario.puntaje : null
+        };
+    } else if (respuestasUsuario[indiceActual] && respuestasUsuario[indiceActual]['preguntaAdicional']) {
+        delete respuestasUsuario[indiceActual]['preguntaAdicional'];
+    }
+
+    // Guarda las respuestas del cuestionario actual en localStorage
+    localStorage.setItem('respuestasUsuario', JSON.stringify(respuestasUsuario));
+    
+    const resultadosPorArea = cuestionariosFiltrados.map((cuestionario, idx) => {
+        let suma = 0;
+        // Si no hay respuestas para esta área, suma será 0
+        const respuestasArea = respuestasUsuario[idx] || {};
+        cuestionario.preguntas.forEach(pregunta => {
+            const respuesta = respuestasArea[pregunta];
+            if (respuesta && typeof respuesta.puntaje === 'number') {
+                suma += respuesta.puntaje;
+            }
+        });
+        // Pregunta adicional
+        if (respuestasArea['preguntaAdicional'] && typeof respuestasArea['preguntaAdicional'].puntaje === 'number') {
+            suma += respuestasArea['preguntaAdicional'].puntaje;
+        }
+        return Math.round(suma);
+    });
+
+    const titulosPorArea = cuestionariosFiltrados.map(c => c.titulo);
+
+    localStorage.setItem('resultadosPorArea', JSON.stringify(resultadosPorArea));
+    localStorage.setItem('titulosPorArea', JSON.stringify(titulosPorArea));
+
+    window.loadPage("contenido/resultado/resultado.html", inicializarResultados);
 }
 
 export { iniciarCuestionario }; // Exporta la función iniciarCuestionario

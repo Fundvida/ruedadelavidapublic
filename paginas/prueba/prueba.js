@@ -62,6 +62,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 300);
     }
 
+    window.loadPage = loadPage;
+
     function selectButton(button) {
         if (currentActiveButton) {
             currentActiveButton.classList.remove('bg-[#e89ca1]', 'text-white');

@@ -7,38 +7,36 @@
 
 <div class="my-15">
     <div class="p-6 rounded-lg shadow-xl ring-2 ring-gray-300">
-        <p class="text-2xl text-gray-800 mb-4">Ahora planifica y define tus objetivos necesarios de cada área a mejorar</p>
+        <p class="text-2xl text-gray-800 mb-4">
+            Ahora planifica y selecciona tus objetivos por área: 
+        </p>
 
         <div class="mb-4">
-            <label for="seleccion-area" class="block text-gray-700 text-sm font-bold mb-2">Selecciona un Área:</label>
-            <select id="seleccion-area" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+            <select id="seleccion-area"
+                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
                 <option value="">Selecciona un área</option>
             </select>
         </div>
 
-        <div id="lista-actividades">
-            <h3 class="text-xl font-semibold mb-2 text-gray-800">Tus Actividades de Planificación:</h3>
-            <div id="actividad-fila-0" class="grid grid-cols-3 gap-4 mb-4">
-                <div>
-                    <label for="actividad-0" class="block text-gray-700 text-sm font-bold mb-2">Actividad:</label>
-                    <select id="actividad-0" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline actividad-select">
-                        <option value="">Selecciona una actividad</option>
-                    </select>
-                </div>
-                <div>
-                    <label for="fecha-inicio-0" class="block text-gray-700 text-sm font-bold mb-2">Fecha Inicio:</label>
-                    <input type="date" id="fecha-inicio-0" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline fecha-inicio">
-                </div>
-                <div>
-                    <label for="fecha-fin-0" class="block text-gray-700 text-sm font-bold mb-2">Fecha Fin:</label>
-                    <input type="date" id="fecha-fin-0" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline fecha-fin">
-                </div>
-            </div>
+            <div id="contenedor-actividades">
+                <!-- Las filas de actividades se agregarán aquí dinámicamente -->
+        </div>
+        <div class="mt-4 text-center">
+            <button id="agregar-actividad"
+                class="px-4 py-2 bg-[#505B80] text-white rounded-md hover:bg-[#d18087] focus:outline-none focus:shadow-outline cursor-pointer">
+                Agregar Nueva Actividad
+            </button>
+            <button id="guardar-actividad"
+                class="px-4 py-2 bg-[#E89CA1] text-white rounded-md hover:bg-[#d18087] focus:outline-none focus:shadow-outline cursor-pointer">
+                Guardar Actividad
+            </button>
         </div>
 
-        <div class="mt-4 text-center">
-            <button id="agregar-actividad" class="px-4 py-2 bg-[#E89CA1] text-white rounded-md hover:bg-[#d18087] focus:outline-none focus:shadow-outline">Agregar Nueva Actividad</button>
+        <div id="lista-actividades">
+            <!-- Contenedor para las filas de actividades -->
         </div>
+        <div id="alert-container" class="mt-4"></div>
+        
     </div>
 </div>
 
