@@ -8,7 +8,10 @@
 <div class="my-15">
     <div class="p-6 rounded-lg shadow-xl ring-2 ring-gray-300">
         <div style="display: flex; flex-direction: row; align-items: center; justify-content: center; gap: 80px;">
+            <div style="position: relative;">
             <canvas id="pizza-chart" width="700" height="700"></canvas>
+            <canvas id="radar-chart" width="700" height="700" style="position: absolute; top: 0; left: 0; z-index: 1;"></canvas>
+            </div>
             <div id="pizza-legend" class="flex flex-col justify-center"></div>
         </div>
     </div>    

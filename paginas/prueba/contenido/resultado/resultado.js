@@ -1,6 +1,7 @@
 function inicializarResultados() {
     generarGraficoPizza();
     generarLeyendaPizza();
+    generarGraficoRadar();
 }
 
 function generarGraficoPizza() {
@@ -11,38 +12,64 @@ function generarGraficoPizza() {
     }
 
     // Lee los resultados guardados
-    let resultadosGuardados = [];
-    let titulosGuardados = [];
+    let respuestasUsuario = [];
+    let cuestionariosFiltrados = [];
     try {
-        resultadosGuardados = JSON.parse(localStorage.getItem('resultadosPorArea')) || [];
-        titulosGuardados = JSON.parse(localStorage.getItem('titulosPorArea')) || [];
-
+        respuestasUsuario = JSON.parse(localStorage.getItem('respuestasUsuario')) || [];
+        cuestionariosFiltrados = JSON.parse(localStorage.getItem('cuestionariosFiltrados')) || [];
     } catch (e) {
-        resultadosGuardados = [];
-        titulosGuardados = [];
+        console.error('Error al leer los datos del localStorage:', e);
     }
 
-    // Usa la cantidad real de áreas (mínimo 8, máximo 12)
-    const cantidad = Math.max(8, Math.min(titulosGuardados.length, 12));
-    const labels = titulosGuardados.slice(0, cantidad);
+    // Generar los títulos y resultados por área
+    const titulosPorArea = cuestionariosFiltrados.map(c => c.titulo);
+    const resultadosPorArea = cuestionariosFiltrados.map((cuestionario, idx) => {
+        let suma = 0;
+        const respuestasArea = respuestasUsuario[idx] || {};
+        cuestionario.preguntas.forEach(pregunta => {
+            const respuesta = respuestasArea[pregunta];
+            if (respuesta && typeof respuesta.puntaje === 'number') {
+                suma += respuesta.puntaje;
+            }
+        });
+        // Incluir la pregunta adicional si existe
+        if (respuestasArea['preguntaAdicional'] && typeof respuestasArea['preguntaAdicional'].puntaje === 'number') {
+            suma += respuestasArea['preguntaAdicional'].puntaje;
+        }
+        return Math.round(suma);
+    });
 
-    // Asegura que cada área tenga un resultado, aunque sea 0
-    const resultadosReales = resultadosGuardados.slice(0, cantidad); // Valores reales para la leyenda
+    // Usa la cantidad real de áreas (mínimo 8, máximo 12)
+    const cantidad = Math.max(8, Math.min(titulosPorArea.length, 12));
+    const labels = titulosPorArea.slice(0, cantidad).map(label => {
+    if (label.length > 15 && label.includes(' ')) {
+        const palabras = label.split(' ');
+        const mitad = Math.ceil(palabras.length / 2);
+        return palabras.slice(0, mitad).join(' ') + '\n' + palabras.slice(mitad).join(' ');
+    }
+    return label;
+});
+
+
+    const resultadosReales = resultadosPorArea.slice(0, cantidad).map(valor => valor || 0); // Asegura que no haya valores undefined
     const resultadosFijos = Array(cantidad).fill(1); // Valores fijos para el gráfico
 
     const coloresBase = [
-    "rgb(154, 0, 76)",     //Rojo oscuro
-    "rgb(196, 0, 77)",      //Rojo cereza
-    "rgb(241, 80, 61)",    // Rojo anaranjado
-    "rgb(249, 137, 35)",   // Naranja
-    "rgb(255, 210, 0)",    // Amarillo oscuro
-    "rgb(234, 234, 99)",   // Amarillo claro
-    "rgb(167, 214, 109)",  // Verde claro
-    "rgb(102, 206, 156)",  // Verde menta
-    "rgb(0, 193, 188)",    //# Turquesa
-    "rgb(45, 136, 162)",  // # Azul océano
-    "rgb(43, 60, 116)",   // # Azul oscuro
-    "rgb(76, 26, 69)"     // # Púrpura oscuro
+        // Rosas (de más profundo a más suave)
+        "#B85C74", // Rosa más profundo pastelado
+        "#D1788C", // Rosa antiguo pastel
+        "#E89CA1", // Rosa palo elegante
+        "#EC729C", // Rosa más vibrante pastel
+        "#F7A1B5", // Rosa suave
+        "#F9C5D5", // Rosa algodón de azúcar
+
+        // Azules (de más profundo a más suave)
+        "#3E4660", // Azul sombra suave
+        "#505B80", // Azul base original
+        "#5A668E", // Azul ligeramente más oscuro
+        "#6A749F", // Azul medio
+        "#9BA2C2", // Azul lavanda apagado
+        "#B3B9D1"  // Azul pastel grisáceo
     ];
 
     const backgroundColor = coloresBase.slice(0, cantidad);
@@ -73,7 +100,7 @@ function generarGraficoPizza() {
             responsive: false,
             plugins: {
                 legend: {
-                    display: false
+                    display: false,
                 },
                 tooltip: {
                     callbacks: {
@@ -86,11 +113,14 @@ function generarGraficoPizza() {
                     }
                 },
                 datalabels: {
+                    display: true,
                     color: '#fff',
                     font: {
                         weight: 'bold',
                         size: 14
                     },
+                    anchor: 'center', // Centrado en el slice
+                    align: 'end',     // Pegado al borde interior del slice
                     formatter: function(value, context) {
                         return window.pizzaChartData.labels[context.dataIndex];
                     }
@@ -98,6 +128,81 @@ function generarGraficoPizza() {
             }
         },
         plugins: [ChartDataLabels]
+    });
+}
+
+
+
+function generarGraficoRadar() {
+    const ctxRadar = document.getElementById('radar-chart');
+    if (!ctxRadar) {
+        console.error('Elemento con ID "radar-chart" no encontrado.');
+        return;
+    }
+    
+    const dataRadar = {
+        labels: window.pizzaChartData.labels,
+        datasets: [{
+            label: 'Resultados',
+            data: window.pizzaChartData.resultados,
+            backgroundColor: 'transparent', // Fondo transparente
+            borderColor: '#b89b72', // Color del borde
+            pointBackgroundColor: '#b89b72',
+            pointBorderColor: '#b89b72',
+            pointHoverBackgroundColor: '#b89b72',
+            pointHoverBorderColor: 'rgba(179,181,198,1)'
+        }]
+    };
+
+    const optionsRadar = {
+    responsive: false,
+    scales: {
+        r: {
+            angleLines: {
+                display: false // Oculta las líneas de los ángulos
+            },
+            grid: {
+                display: false // Oculta la red de araña
+            },
+            suggestedMin: 0,
+            suggestedMax: 10,  // Ajusta según el rango de tus datos
+            ticks: {
+                display: false // Oculta los números del eje
+            },
+            pointLabels: {  
+                display: false,
+                color: '#7c5a36', 
+                font: {
+                    size: 12  
+            }
+            },
+        }
+    },
+    plugins: {
+        legend: {
+            display: false
+        },
+        datalabels: {
+            display: true, // <-- ACTIVAR etiquetas en los vértices
+            anchor: 'end',  
+            align: 'end',    
+            font: {
+                size: 18,
+                weight: 'bold'
+            },
+            color: '#050506',     // Color de la etiqueta
+            formatter: function(value) {
+                    return value;
+            }
+        }
+    }
+};
+
+    window.radarChartInstance = new Chart(ctxRadar, {
+        type: 'radar',
+        data: dataRadar,
+        options: optionsRadar,
+        plugins: [ChartDataLabels] // Registra el plugin
     });
 }
 
@@ -115,23 +220,28 @@ function generarLeyendaPizza() {
     legendContainer.style.marginTop = '50px';
 
     // URLs de los íconos en el mismo orden que los títulos
-    const iconUrls = [
-        "https://cdn.lordicon.com/oncyjozz.json", // CONTRIBUCION SOCIAL
-        "https://cdn.lordicon.com/mxddzdmt.json", // OCIO
-        "https://cdn.lordicon.com/fdaaenax.json", // SALUD
-        "https://cdn.lordicon.com/kjkiqtxg.json", // FAMILIA
-        "https://cdn.lordicon.com/xhbsnkyp.json", // AMISTADES
-        "https://cdn.lordicon.com/hqrgkqvs.json", // PAREJA
-        "https://cdn.lordicon.com/etqbfrgp.json", // HOGAR
-        "https://cdn.lordicon.com/xxdqfhbi.json", // CRECIMIENTO PERSONAL
-        "https://cdn.lordicon.com/ttioogfl.json", // EDUCACIÓN
-        "https://cdn.lordicon.com/jluicbpf.json", // ESPIRITUALIDAD
-        "https://cdn.lordicon.com/hbwqfgcf.json", // ECONOMÍA
-        "https://cdn.lordicon.com/pqxdilfs.json"  // TRABAJO
-    ];
+    const iconMap = {
+    "CONTRIBUCION SOCIAL": "https://cdn.lordicon.com/oncyjozz.json",
+    "OCIO": "https://cdn.lordicon.com/mxddzdmt.json",
+    "SALUD": "https://cdn.lordicon.com/fdaaenax.json",
+    "FAMILIA": "https://cdn.lordicon.com/kjkiqtxg.json",
+    "AMISTADES": "https://cdn.lordicon.com/xhbsnkyp.json",
+    "PAREJA": "https://cdn.lordicon.com/hqrgkqvs.json",
+    "HOGAR": "https://cdn.lordicon.com/etqbfrgp.json",
+    "CRECIMIENTO PERSONAL": "https://cdn.lordicon.com/xxdqfhbi.json",
+    "EDUCACIÓN": "https://cdn.lordicon.com/ttioogfl.json",
+    "ESPIRITUALIDAD": "https://cdn.lordicon.com/jluicbpf.json",
+    "ECONOMÍA": "https://cdn.lordicon.com/hbwqfgcf.json",
+    "TRABAJO": "https://cdn.lordicon.com/pqxdilfs.json"
+};
 
-        // Generar los elementos de la leyenda
-        window.pizzaChartData.labels.forEach((label, i) => {
+const iconUrlsReordenados = window.pizzaChartData.labels.map(label => {
+        const labelUpper = label.replace(/\s+/g, ' ').replace(/\n/g, ' ').trim().toUpperCase();
+    return iconMap[labelUpper] || null; // O un ícono por defecto
+});
+
+    // Generar los elementos de la leyenda
+    window.pizzaChartData.labels.forEach((label, i) => {
         const color = window.pizzaChartData.backgroundColor[i];
         const resultado = Math.round(window.pizzaChartData.resultados[i]);
 
@@ -143,12 +253,10 @@ function generarLeyendaPizza() {
 
         // Ícono de lord-icon (fuera del item)
         const lordIcon = document.createElement('lord-icon');
-        lordIcon.setAttribute('src', iconUrls[i]); // Asigna el ícono correspondiente
+        lordIcon.setAttribute('src', iconUrlsReordenados[i]); // Asigna el ícono correspondiente
         lordIcon.setAttribute('trigger', 'hover');
         lordIcon.setAttribute('colors', `outline:#000000,primary:${color}`);
         lordIcon.style.minWidth = '40px';
-        lordIcon.style.minHeight = '40px';
-        lordIcon.style.marginRight = '10px';
 
         // Contenedor del texto (label y resultado)
         const item = document.createElement('div');

@@ -5,39 +5,40 @@ function inicializarReflexion() {
     const respuestasUsuarioGuardadas = JSON.parse(localStorage.getItem('respuestasUsuario')) || [];
     const cuestionariosFiltrados = JSON.parse(localStorage.getItem('cuestionariosFiltrados')) || [];
 
-    if (respuestasUsuarioGuardadas.length > 0 && cuestionariosFiltrados.length > 0) {
+    if (respuestasUsuarioGuardadas.length > 0 && cuestionariosFiltrados.length > 0 &&
+        respuestasUsuarioGuardadas.some(resp => Object.keys(resp || {}).length > 0)) 
+    {
         cuestionariosFiltrados.forEach((seccionInfo, indexSeccion) => {
-            // Sumar el puntaje total de la sección
             const respuestasDeSeccion = respuestasUsuarioGuardadas[indexSeccion] || {};
             let suma = 0;
+
             Object.values(respuestasDeSeccion).forEach(respuesta => {
                 if (respuesta && typeof respuesta.puntaje === 'number') {
                     suma += respuesta.puntaje;
                 }
             });
+
             suma = Math.round(suma);
 
-            // Determinar el rango de puntaje
+            // Determinar el rango y color
             let rango = '';
             let bgColor = '';
             if (suma > 8) {
                 rango = 'alto';
-                bgColor = '#A5D6A7'; // verde suave
+                bgColor = 'rgb(74, 183, 80)'; // verde suave
             } else if (suma >= 5) {
                 rango = 'medio';
-                bgColor = '#FFF59D'; // amarillo suave
+                bgColor = 'rgb(249, 242, 93)'; // amarillo suave
             } else {
                 rango = 'bajo';
-                bgColor = '#EF9A9A'; // rojo suave
+                bgColor = 'rgb(213, 68, 68)'; // rojo suave
             }
 
-             // Buscar el objeto de reflexión por título
-            const reflexion = reflexionesPorSeccion.find(
-                r => r.titulo === seccionInfo.titulo
-            );
-            const frase = reflexion ? reflexion[rango] : 'Reflexiona sobre esta área.';
+            // Obtener la frase de reflexión
+            const reflexion = reflexionesPorSeccion.find(r => r.titulo === seccionInfo.titulo);
+            const frase = reflexion ? reflexion[rango] : '';
 
-            // Crear la fila
+            // Crear fila con colores
             const fila = tablaRespuestasBody.insertRow();
             const celdaSeccion = fila.insertCell();
             celdaSeccion.textContent = seccionInfo.titulo;
@@ -49,13 +50,8 @@ function inicializarReflexion() {
             celdaReflexion.classList.add('p-4', 'border', 'text-center');
             celdaReflexion.style.backgroundColor = bgColor;
         });
-    } else {
-        const fila = tablaRespuestasBody.insertRow();
-        const celdaMensaje = fila.insertCell();
-        celdaMensaje.colSpan = 2;
-        celdaMensaje.textContent = 'No se encontraron respuestas del formulario.';
-        celdaMensaje.classList.add('text-center', 'p-4');
     }
+    // Si no hay resultados válidos, tabla queda vacía
 }
 
 export { inicializarReflexion };

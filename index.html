@@ -26,7 +26,7 @@
 
         <div class="logo" style="display:flex ; flex-direction: column;">
             <img src="./imagenes/PsicoVida.png" class="logo-image">
-            <div style="color: #505B80;padding-top: 2rem; font-size: 1.5rem;">
+            <div class="bienvenido-text">
                 Bienvenido "Listo/lista para mejorar tu autoconocimiento"
             </div>
         </div>
@@ -60,8 +60,8 @@
         </a>
 
         <div id="pruebaContainer">
-            <a href="/paginas/prueba/prueba.html" style="text-decoration: none;">
-                <div class="serviceBox" id="prueba">
+            <div href="/paginas/prueba/prueba.html" style="text-decoration: none;">
+                <div class="serviceBox" id="prueba" style="cursor: pointer;">
                     <div class="icon" style="--i: #E89CA1;">
                         <i class="fab fa-steam"></i>
                     </div>
@@ -71,13 +71,9 @@
                           
                         </p>
                     </div>
+                    <div class="right" id="hand"></div>
                 </div> <!-- prueba -->
-            </a> 
-
-
-
-            <div class="right" id="hand"></div>
-
+            </div> 
         </div>
         <!-- <script>
             if (localStorage.getItem('reload'))
@@ -108,6 +104,19 @@
 
     </div>
     <!-- <script type="module" src="js/fondo.js"></script> -->
+    <script>
+        document.getElementById('prueba').addEventListener('click', () => {
+        // Borra todo lo necesario
+        localStorage.removeItem('respuestasUsuario');
+        localStorage.removeItem('cuestionariosFiltrados');
+        localStorage.removeItem('resultadosPorArea'); // Si usas un key específico para la rueda
+        localStorage.removeItem('otroDato'); // Agrega aquí cualquier otra clave que quieras borrar
+
+        // Redirige a la página del cuestionario
+        window.location.href = "/paginas/prueba/prueba.html";
+    });
+    </script>
+
 </body>
 
 </html>

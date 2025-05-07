@@ -201,11 +201,35 @@ function renderizarCuestionario() {
         celda.classList.remove('bg-[#E89CA1]', 'text-white', 'cursor-pointer', 'hover:bg-gray-300');
         celda.removeEventListener('click', seleccionarOpcionAdicional);
     });
-    if (preguntaAdicionalUsuarioInput) {
-        preguntaAdicionalUsuarioInput.value = '';
+    // Restaurar pregunta adicional y su opción seleccionada si existe
+if (preguntaAdicionalUsuarioInput) {
+    preguntaAdicionalUsuarioInput.removeEventListener('input', manejarCambioPreguntaAdicional);
+    preguntaAdicionalUsuarioInput.addEventListener('input', manejarCambioPreguntaAdicional);
+
+    const datosPreguntaAdicional = respuestasUsuario[indiceActual]['preguntaAdicional'];
+    if (datosPreguntaAdicional) {
+        preguntaAdicionalUsuarioInput.value = datosPreguntaAdicional.pregunta;
+
+        // Simular el input para regenerar opciones si hay texto suficiente
+        if (datosPreguntaAdicional.pregunta.length >= 6) {
+            manejarCambioPreguntaAdicional({ target: preguntaAdicionalUsuarioInput });
+            // Esperar un micro-tick para que las celdas estén disponibles y luego marcar la opción seleccionada
+            setTimeout(() => {
+                const opcionesAdicionalesCeldas = filaPreguntaAdicional.querySelectorAll('.opciones-adicionales');
+                opcionesAdicionalesCeldas.forEach(celda => {
+                    if (celda.dataset.opcionTexto === datosPreguntaAdicional.opcion) {
+                        seleccionarOpcionAdicional.call(celda);
+                    }
+                });
+            }, 0);
+        }
+    } else {
+        preguntaAdicionalUsuarioInput.value = "";
+        deshabilitarOpcionesAdicionales();
+        respuestaAdicionalUsuario = null;
     }
-    respuestaAdicionalUsuario = null;
-    deshabilitarOpcionesAdicionales();
+}
+
 
     cuestionariosFiltrados[indiceActual].preguntas.forEach((pregunta, indicePregunta) => {
         const fila = document.createElement("tr");
@@ -251,9 +275,23 @@ function reiniciarCuestionario() {
     iniciarCuestionario(); // Volver a iniciar para re-filtrar o mostrar todo
     actualizarBotones();
     if (preguntaAdicionalUsuarioInput) {
+    preguntaAdicionalUsuarioInput.removeEventListener('input', manejarCambioPreguntaAdicional);
+    preguntaAdicionalUsuarioInput.addEventListener('input', manejarCambioPreguntaAdicional);
+    // Restaurar la pregunta adicional si existe para la sección actual
+    if (respuestasUsuario[indiceActual] && respuestasUsuario[indiceActual]['preguntaAdicional']) {
+        preguntaAdicionalUsuarioInput.value = respuestasUsuario[indiceActual]['preguntaAdicional'].pregunta;
+        const opcionesAdicionalesCeldas = filaPreguntaAdicional.querySelectorAll('.opciones-adicionales');
+        opcionesAdicionalesCeldas.forEach(celda => {
+            if (respuestasUsuario[indiceActual]['preguntaAdicional'].opcion && celda.dataset.opcionTexto === respuestasUsuario[indiceActual]['preguntaAdicional'].opcion) {
+                seleccionarOpcionAdicional.call(celda);
+            }
+        });
+    } else {
         preguntaAdicionalUsuarioInput.value = "";
+        deshabilitarOpcionesAdicionales();
+        respuestaAdicionalUsuario = null;
+      }
     }
-    deshabilitarOpcionesAdicionales();
 }
 
 function finalizarCuestionario() {

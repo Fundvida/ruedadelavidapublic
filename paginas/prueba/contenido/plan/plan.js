@@ -235,6 +235,12 @@ function inicializarPlan() {
 
     // Agregar la tabla al DOM
     listaActividades.appendChild(tabla);
+
+    // Mostrar los botones de descarga
+    const botonesDescarga = document.getElementById('botones-descarga');
+    if (botonesDescarga) {
+        botonesDescarga.style.display = 'flex';
+    }
 }
     // Mostrar la tabla al cargar la página
     document.addEventListener('DOMContentLoaded', mostrarTablaActividades);
@@ -242,6 +248,39 @@ function inicializarPlan() {
 
     // Manejador del botón "Guardar Actividades"
     guardarActividadBoton.addEventListener('click', guardarActividades);
+
+    // Descargar tabla como Excel
+    document.getElementById('descargar-excel').addEventListener('click', () => {
+    const actividadesGuardadas = JSON.parse(localStorage.getItem('actividadesGuardadas')) || [];
+    if (actividadesGuardadas.length === 0) return;
+
+    // Crear hoja de cálculo
+    const ws = XLSX.utils.json_to_sheet(actividadesGuardadas);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Actividades");
+
+    // Descargar archivo
+    XLSX.writeFile(wb, "actividades.xlsx");
+});
+
+// Descargar tabla como PDF
+    document.getElementById('descargar-pdf').addEventListener('click', () => {
+    const tabla = document.getElementById('tabla-actividades');
+    if (!tabla) return;
+
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+    doc.autoTable({
+        html: '#tabla-actividades',
+        theme: 'striped',
+        headStyles: { fillColor: [233, 156, 161] }, // color rosado suave
+        styles: { fontSize: 10, cellPadding: 3 },
+        margin: { top: 20 }
+    });
+
+     doc.save('actividades.pdf');
+});
+
 
     // Manejadores de eventos
     seleccionArea.addEventListener('change', (event) => {
