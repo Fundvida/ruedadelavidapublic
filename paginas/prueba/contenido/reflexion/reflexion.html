@@ -1,24 +1,28 @@
 <div class="text-center px-5">
     <label
-        class="text-[#E89CA1] flex justify-center items-center p-2 mx-[10%] text-4xl bg-[#fbf1f1] rounded-lg font-lilita-one">
+        class="text-[#E89CA1] flex justify-center items-center p-2 mx-[10%] text-2xl lg:text-4xl bg-[#fbf1f1] rounded-lg font-lilita-one">
         REFLEXIÓN
     </label>
 </div>
 
 <div class="my-15">
-    <div class="p-6 rounded-lg shadow-xl ring-2 ring-gray-300">
-        <p class="mt-2">Recuerda que el color de tu respuesta indica tu nivel de bienestar en esa área, si es <span class="font-bold text-red-500">ROJO</span> es una señal de alerta y 
-            es importante hacer cambios; si es <span class="font-bold text-yellow-500">AMARILLO</span> vas por buen camino pero aún hay oportunidades de mejorar; y si es 
-            <span class="font-bold text-green-500">VERDE</span> lo estás haciendo excelente, ¡Sigue así! </p>
+    <div class="p-2 sm:p-6 rounded-lg shadow-xl" style="background: #f5f0ec;">
+        <p class="mt-2 text-sm sm:text-base">
+            Recuerda que el color de tu respuesta indica tu nivel de bienestar en esa área, si es
+            <span class="font-bold text-red-500">ROJO</span> es una señal de alerta y es importante hacer cambios; si es
+            <span class="font-bold text-yellow-500">AMARILLO</span> vas por buen camino pero aún hay oportunidades de
+            mejorar y si es
+            <span class="font-bold text-green-500">VERDE</span> lo estás haciendo excelente, ¡Sigue así!
+        </p>
 
         <div class="mt-6 overflow-x-auto">
-            <table class="table-auto w-full border-collapse border border-gray-700">
-                <thead class="bg-[#505B80] text-white">
-    <tr>
-        <th class="p-4 border border-gray-600">SECCIÓN</th>
-        <th class="p-4 border border-gray-600">REFLEXIÓN</th>
-    </tr>
-</thead>
+            <table class="table-auto w-full border border-[#b3a28a] text-xs sm:text-base">
+                <thead class="bg-[#b3a28a] text-white">
+                    <tr>
+                        <th class="p-2 sm:p-4 border border-[#b3a28a]">SECCIÓN</th>
+                        <th class="p-2 sm:p-4 border border-[#b3a28a]">REFLEXIÓN</th>
+                    </tr>
+                </thead>
                 <tbody id="tabla-respuestas">
                 </tbody>
             </table>

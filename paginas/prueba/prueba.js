@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function renderNavButtons() {
         botonesNavegacion.forEach((boton, index) => {
             const button = document.createElement('div');
-            button.className = `p-4 cursor-pointer w-14 h-14 rounded-full flex justify-center items-center m-3 bg-[#454e56] text-gray-200`;
+            button.className = `p-4 cursor-pointer w-10 h-10 md:w-14 md:h-14 rounded-full flex justify-center items-center m-3 bg-[#454e56] text-gray-200`;
             button.innerHTML = `<i class="${boton.icono}"></i>`;
             button.dataset.page = boton.pagina;
             button.addEventListener('click', () => {
@@ -42,6 +42,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     contentContainer.innerHTML = html;
                     contentContainer.classList.remove('blur-sm', 'translate-y-4');
                     contentContainer.classList.add('translate-y-0');
+                    window.scrollTo({ top: 0 });
 
                     // Llamar a la función de inicialización de la página actual si existe
                     if (currentPageInitFunction) {

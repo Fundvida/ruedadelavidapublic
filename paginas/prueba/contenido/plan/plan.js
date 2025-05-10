@@ -9,7 +9,35 @@ function inicializarPlan() {
     const guardarActividadBoton = document.getElementById('guardar-actividad');
     const contenedorActividades = document.getElementById('contenedor-actividades');
 
+    // --- NUEVO: Calcular áreas de rango bajo y medio ---
+    const respuestasUsuarioGuardadas = JSON.parse(localStorage.getItem('respuestasUsuario')) || [];
     const cuestionariosFiltrados = JSON.parse(localStorage.getItem('cuestionariosFiltrados')) || [];
+    
+    // Determinar el rango de cada área
+    let areasBajo = [];
+    let areasMedio = [];
+    if (respuestasUsuarioGuardadas.length && cuestionariosFiltrados.length) {
+        cuestionariosFiltrados.forEach((area, idx) => {
+            let suma = 0;
+            const respuestasDeSeccion = respuestasUsuarioGuardadas[idx] || {};
+            Object.values(respuestasDeSeccion).forEach(respuesta => {
+                if (respuesta && typeof respuesta.puntaje === 'number') {
+                    suma += respuesta.puntaje;
+                }
+            });
+            suma = Math.round(suma);
+            if (suma < 5) {
+                areasBajo.push(area);
+            } else if (suma >= 5 && suma <= 8) {
+                areasMedio.push(area);
+            }
+        });
+    }
+    // Unir primero bajo, luego medio, máximo 10
+    const areasParaPlan = [...areasBajo, ...areasMedio].slice(0, 10);
+
+    // --- FIN NUEVO ---
+
     let numActividades = 0;
     const actividadesSeleccionadas = {};
 
@@ -18,10 +46,16 @@ function inicializarPlan() {
     agregarActividadBoton.disabled = true;
 
     // Llenar el combo de áreas
-    cuestionariosFiltrados.forEach(area => {
+    areasParaPlan.forEach(area => {
         const opcion = document.createElement('option');
         opcion.value = area.numeroSeccion;
         opcion.textContent = area.titulo;
+        // Marcar las opciones de rango medio con un atributo personalizado
+    if (areasMedio.includes(area)) {
+        opcion.setAttribute('data-rango', 'medio');
+    } else {
+        opcion.setAttribute('data-rango', 'bajo');
+    }
         seleccionArea.appendChild(opcion);
     });
 
@@ -285,6 +319,20 @@ function inicializarPlan() {
     // Manejadores de eventos
     seleccionArea.addEventListener('change', (event) => {
         const areaSeleccionada = event.target.value;
+        // Detectar si la opción elegida es de rango medio
+        const selectedOption = event.target.selectedOptions[0];
+        const rango = selectedOption ? selectedOption.getAttribute('data-rango') : null;
+
+        // Si hay opciones de rango bajo aún disponibles en el select, mostrar alerta
+        if (rango === 'medio') {
+            const hayBajo = Array.from(seleccionArea.options).some(
+                opt => opt.getAttribute('data-rango') === 'bajo' && opt.value !== "" && !opt.disabled
+            );
+            if (hayBajo) {
+                mostrarAlerta('Primero debes elegir actividades de las áreas en color rojo.');
+            }
+        }
+
         agregarActividadBoton.disabled = !areaSeleccionada;
         if (areaSeleccionada) {
             contenedorActividades.innerHTML = '';

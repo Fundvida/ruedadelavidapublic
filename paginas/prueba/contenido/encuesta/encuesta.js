@@ -233,11 +233,11 @@ if (preguntaAdicionalUsuarioInput) {
 
     cuestionariosFiltrados[indiceActual].preguntas.forEach((pregunta, indicePregunta) => {
         const fila = document.createElement("tr");
-        fila.innerHTML = `<td class="p-4 border border-gray-600 text-center">${pregunta}</td>`;
+        fila.innerHTML = `<td class="p-4 border border-[#b3a28a] text-center">${pregunta}</td>`;
 
         opciones.forEach((opcion, indiceOpcion) => {
             const celda = document.createElement("td");
-            celda.className = "p-4 border border-gray-600 text-center cursor-pointer hover:bg-gray-300";
+            celda.className = "p-4 border border-[#b3a28a] text-center cursor-pointer hover:bg-gray-300";
             celda.dataset.pregunta = indicePregunta;
             celda.dataset.opcion = indiceOpcion;
 
@@ -246,15 +246,15 @@ if (preguntaAdicionalUsuarioInput) {
              // Restaurar la selección si ya existe una respuesta guardada
             const respuestaGuardada = respuestasUsuario[indiceActual][pregunta];
             if (respuestaGuardada && respuestaGuardada.opcion === opcion.texto) {
-                celda.classList.add("bg-[#E89CA1]", "text-white");
+                celda.classList.add("bg-[#EDB1B5]", "text-white");
             }
 
             celda.addEventListener("click", () => {
                 document.querySelectorAll(`td[data-pregunta="${indicePregunta}"]`).forEach(celda => {
-                    celda.classList.remove("bg-[#E89CA1]", "text-white");
+                    celda.classList.remove("bg-[#EDB1B5]", "text-white");
                 });
 
-                celda.classList.add("bg-[#E89CA1]", "text-white");
+                celda.classList.add("bg-[#EDB1B5]", "text-white");
 
                 respuestasUsuario[indiceActual][pregunta] = {
                     opcion: opcion.texto,

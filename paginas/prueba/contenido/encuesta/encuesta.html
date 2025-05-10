@@ -1,63 +1,55 @@
 <div class="text-center px-5">
     <label
-        class="text-[#E89CA1] flex justify-center items-center p-2 mx-[10%] text-4xl bg-[#fbf1f1] rounded-lg font-lilita-one">
+        class="text-[#E89CA1] flex justify-center items-center p-2 mx-[8%] text-2xl lg:text-4xl bg-[#fbf1f1] rounded-lg font-lilita-one">
         COMIENZA TU PRUEBA
     </label>
 </div>
 
+<!-- ...existing code... -->
 <div class="my-15">
-    <div class="p-6 rounded-lg shadow-xl ring-2 ring-gray-300">
-        <h2 id="tituloCuestionario" class="text-center text-3xl font-bold text-[#505B80] mb-6 text" style="font-family: 'Lucida Handwriting', cursive;"></h2>
+    <div class="p-6 rounded-lg shadow-xl" style="background: #f5f0ec;">
+        <h2 id="tituloCuestionario" class="text-center text-3xl font-bold text-[#b3a28a] mb-6"
+            style="font-family: 'Lucida Handwriting', cursive;"></h2>
         <div class="overflow-x-auto">
-            <table class="table-auto w-full border-collapse border border-gray-700">
-                <thead class="bg-[#505B80] text-white">
+            <table class="table-auto w-full border border-[#b3a28a] text-xs sm:text-base">
+                <thead class="bg-[#b3a28a] text-white">
                     <tr>
-                        <th class="p-4 border border-gray-600">Preguntas</th>
-                        <th class="p-4 border border-gray-600 w-1/8">Nunca</th>
-                        <th class="p-4 border border-gray-600 w-1/8">Rara vez</th>
-                        <th class="p-4 border border-gray-600 w-1/8">Algunas veces</th>
-                        <th class="p-4 border border-gray-600 w-1/8">Frecuentemente</th>
-                        <th class="p-4 border border-gray-600 w-1/8">Siempre</th>
+                        <th class="p-2 sm:p-4 border-[#b3a28a]">Preguntas</th>
+                        <th class="p-2 sm:p-4 border-[#b3a28a] w-1/8">Nunca</th>
+                        <th class="p-2 sm:p-4 border-[#b3a28a] w-1/8">Rara vez</th>
+                        <th class="p-2 sm:p-4 border-[#b3a28a] w-1/8">Algunas veces</th>
+                        <th class="p-2 sm:p-4 border-[#b3a28a] w-1/8">Frecuentemente</th>
+                        <th class="p-2 sm:p-4 border-[#b3a28a] w-1/8">Siempre</th>
                     </tr>
                 </thead>
                 <tbody id="tablaCuerpo">
                     <tr id="filaPreguntaAdicional">
-                        <td class="p-4 border border-gray-600 text-center font-semibold">
+                        <td class="p-2 sm:p-4 border border-[#b3a28a] text-center">
                             <label for="preguntaAdicionalUsuario">Pregunta Adicional (Opcional):</label><br>
                             <textarea id="preguntaAdicionalUsuario"
-                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                class="shadow appearance-none border border-[#b3a28a] rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline text-xs sm:text-base"
                                 rows="2" placeholder="Escribe aquí tu pregunta (mínimo 6 caracteres)..."></textarea>
                         </td>
-                        <td
-                            class="p-4 border border-gray-600 text-center opciones-adicionales cursor-pointer hover:bg-gray-300">
-                        </td>
-                        <td
-                            class="p-4 border border-gray-600 text-center opciones-adicionales cursor-pointer hover:bg-gray-300">
-                        </td>
-                        <td
-                            class="p-4 border border-gray-600 text-center opciones-adicionales cursor-pointer hover:bg-gray-300">
-                        </td>
-                        <td
-                            class="p-4 border border-gray-600 text-center opciones-adicionales cursor-pointer hover:bg-gray-300">
-                        </td>
-                        <td
-                            class="p-4 border border-gray-600 text-center opciones-adicionales cursor-pointer hover:bg-gray-300">
-                        </td>
+                        <td class="p-2 sm:p-4 border border-[#b3a28a] text-center opciones-adicionales cursor-pointer hover:bg-gray-300"></td>
+                        <td class="p-2 sm:p-4 border border-[#b3a28a] text-center opciones-adicionales cursor-pointer hover:bg-gray-300"></td>
+                        <td class="p-2 sm:p-4 border border-[#b3a28a] text-center opciones-adicionales cursor-pointer hover:bg-gray-300"></td>
+                        <td class="p-2 sm:p-4 border border-[#b3a28a] text-center opciones-adicionales cursor-pointer hover:bg-gray-300"></td>
                     </tr>
                 </tbody>
             </table>
         </div>
         <div class="text-center mt-6">
             <button type="button" id="anteriorCuestionario"
-                class="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-500 cursor-pointer hidden">Anterior</button>
+                class="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-500 cursor-pointer hidden text-xs sm:text-base">Anterior</button>
             <button type="button" id="siguienteCuestionario"
-                class="px-6 py-2 bg-[#E89CA1] text-white rounded-md cursor-pointer">
+                class="px-6 py-2 bg-[#ceb79d] text-white rounded-md cursor-pointer text-xs sm:text-base">
                 Siguiente
             </button>
             <button type="button" id="finalizarCuestionario"
-                class="px-6 py-2 bg-[#E89CA1] text-white rounded-md cursor-pointer hidden">
+                class="px-6 py-2 bg-[#ceb79d] text-white rounded-md cursor-pointer hidden text-xs sm:text-base">
                 Finalizar Cuestionario
             </button>
         </div>
     </div>
 </div>
+<!-- ...existing code... -->

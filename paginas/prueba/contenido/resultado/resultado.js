@@ -97,7 +97,8 @@ function generarGraficoPizza() {
         type: 'pie',
         data: data,
         options: {
-            responsive: false,
+            responsive: true, 
+            maintainAspectRatio: false,
             plugins: {
                 legend: {
                     display: false,
@@ -115,12 +116,13 @@ function generarGraficoPizza() {
                 datalabels: {
                     display: true,
                     color: '#fff',
-                    font: {
-                        weight: 'bold',
-                        size: 14
-                    },
-                    anchor: 'center', // Centrado en el slice
-                    align: 'end',     // Pegado al borde interior del slice
+                    font: function(context) {
+                    return context.chart.canvas.clientWidth < 400
+                        ? { weight: 'bold', size: 7 } // Celular
+                        : { weight: 'bold', size: 12 }; // Escritorio
+                    },  
+                    anchor: 'center',
+                    align: 'end',
                     formatter: function(value, context) {
                         return window.pizzaChartData.labels[context.dataIndex];
                     }
@@ -155,7 +157,8 @@ function generarGraficoRadar() {
     };
 
     const optionsRadar = {
-    responsive: false,
+    responsive: true,
+    maintainAspectRatio: false,
     scales: {
         r: {
             angleLines: {
@@ -266,8 +269,15 @@ const iconUrlsReordenados = window.pizzaChartData.labels.map(label => {
         item.style.borderRadius = '8px';
         item.style.display = 'flex';
         item.style.justifyContent = 'space-between'; // Alinea el label y el resultado
-        item.style.minWidth = '300px'; // Asegura que ocupe todo el ancho disponible
+        item.style.minWidth = '180px'; // antes era 300px
+        item.style.maxWidth = '100%';
         item.style.fontWeight = 'bold';
+
+        if (window.innerWidth < 768) {
+            item.style.fontSize = '0.85rem'; // Más pequeño en móvil
+        } else {
+            item.style.fontSize = '1.1rem'; // Normal en escritorio
+        }
 
         // Texto del label
         const labelText = document.createElement('span');

@@ -5,7 +5,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const btnSaveChanges = document.getElementById("btn_save_changes");
     const alertContainer = document.getElementById("alert-container");
 
-    let seccionesSeleccionadasNumeros = JSON.parse(localStorage.getItem("seccionesSeleccionadas")) || [];
+    localStorage.removeItem("seccionesSeleccionadas");
+    let seccionesSeleccionadasNumeros = [];
 
     const crearTareas = () => {
         tbodySec.innerHTML = "";

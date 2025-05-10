@@ -5,9 +5,21 @@ animation: text-focus-in 1s cubic-bezier(0.55, 0.085, 0.68, 0.53) both;
 }
 .nombreApp {
     text-align: center;
-    font-size: 5rem;
+    font-size: 2rem;
     font-weight: bold;
-    margin-top: 20px;
+    margin-top: 20px; 
+}
+
+@media (min-width: 768px) {
+    .nombreApp {
+        font-size: 3rem; /* Tamaño para tablets */
+    }
+}
+
+@media (min-width: 1024px) {
+    .nombreApp {
+        font-size: 4rem; /* Tamaño para pantallas grandes */
+    }
 }
 
 .nombreApp label {
@@ -16,6 +28,25 @@ animation: text-focus-in 1s cubic-bezier(0.55, 0.085, 0.68, 0.53) both;
     font-family: 'Cabin Sketch';
     padding: 10px;
     color: #505B80;
+}
+
+.bienvenido-text {
+    color: #505B80;
+    padding-top: 2rem;
+    font-size: 1.5rem; /* Tamaño predeterminado */
+    text-align: center;
+}
+
+@media (min-width: 768px) {
+    .bienvenido-text {
+        font-size: 2rem; /* Tamaño para tablets */
+    }
+}
+
+@media (min-width: 1024px) {
+    .bienvenido-text {
+        font-size: 2.5rem; /* Tamaño para pantallas grandes */
+    }
 }
 
 @-webkit-keyframes text-focus-in {

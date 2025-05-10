@@ -25,13 +25,13 @@ function inicializarReflexion() {
             let bgColor = '';
             if (suma > 8) {
                 rango = 'alto';
-                bgColor = 'rgb(74, 183, 80)'; // verde suave
+                bgColor = '#A8D5A2'; // verde suave
             } else if (suma >= 5) {
                 rango = 'medio';
-                bgColor = 'rgb(249, 242, 93)'; // amarillo suave
+                bgColor = '#FFF5B7'; // amarillo suave
             } else {
                 rango = 'bajo';
-                bgColor = 'rgb(213, 68, 68)'; // rojo suave
+                bgColor = '#E6A5A1'; // rojo suave
             }
 
             // Obtener la frase de reflexión
@@ -42,12 +42,12 @@ function inicializarReflexion() {
             const fila = tablaRespuestasBody.insertRow();
             const celdaSeccion = fila.insertCell();
             celdaSeccion.textContent = seccionInfo.titulo;
-            celdaSeccion.classList.add('p-4', 'border', 'text-center');
+            celdaSeccion.classList.add('p-4', 'border', 'border-[#b3a28a]', 'text-center');
             celdaSeccion.style.backgroundColor = bgColor;
 
             const celdaReflexion = fila.insertCell();
             celdaReflexion.textContent = frase;
-            celdaReflexion.classList.add('p-4', 'border', 'text-center');
+            celdaReflexion.classList.add('p-4', 'border', 'border-[#b3a28a]', 'text-center');
             celdaReflexion.style.backgroundColor = bgColor;
         });
     }

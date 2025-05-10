@@ -124,6 +124,18 @@ body {
   font-weight: 300;
   line-height: 1.5em;
 }
+@media (max-width: 768px) {
+  .container .serviceBox {
+    width: 200px;
+    height: 150px;
+   }
+  .container .serviceBox .content h2 {
+    font-size: 1em;
+  }
+  .container .serviceBox .icon i {
+    font-size: 3em;
+  }
+}
 
 /* .serviceBox{justify-content: center; */
 
