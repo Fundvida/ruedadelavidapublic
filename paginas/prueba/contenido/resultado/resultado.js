@@ -217,10 +217,14 @@ function generarLeyendaPizza() {
     legendContainer.innerHTML = '';
 
     // Apila los recuadros en columna
+    // Estilo para el contenedor de la leyenda
     legendContainer.style.display = 'flex';
     legendContainer.style.flexDirection = 'column';
-    legendContainer.style.alignItems = 'flex-start';
-    legendContainer.style.marginTop = '50px';
+    legendContainer.style.alignItems = 'center'; // Cambiado de 'flex-start' a 'center'
+    legendContainer.style.marginTop = '30px';    // Más cerca del gráfico
+    legendContainer.style.marginLeft = '0';      // Elimina cualquier desplazamiento lateral
+    legendContainer.style.flex = '1';            // Permite adaptarse mejor al espacio disponible
+    legendContainer.style.width = '100%';
 
     // URLs de los íconos en el mismo orden que los títulos
     const iconMap = {
@@ -268,15 +272,16 @@ const iconUrlsReordenados = window.pizzaChartData.labels.map(label => {
         item.style.padding = '8px 16px';
         item.style.borderRadius = '8px';
         item.style.display = 'flex';
-        item.style.justifyContent = 'space-between'; // Alinea el label y el resultado
-        item.style.minWidth = '180px'; // antes era 300px
-        item.style.maxWidth = '100%';
+        item.style.justifyContent = 'space-between';
         item.style.fontWeight = 'bold';
+        item.style.width = '260px'; // <-- Ancho fijo igual para todos
 
         if (window.innerWidth < 768) {
-            item.style.fontSize = '0.85rem'; // Más pequeño en móvil
+            item.style.fontSize = '0.75rem';
+            item.style.padding = '6px 12px'; // Reduce el padding
+            item.style.width = '220px'; // Más angosto en móvil
         } else {
-            item.style.fontSize = '1.1rem'; // Normal en escritorio
+            item.style.fontSize = '1rem'; // Normal en escritorio
         }
 
         // Texto del label

@@ -36,10 +36,13 @@ function inicializarPlan() {
     // Unir primero bajo, luego medio, máximo 10
     const areasParaPlan = [...areasBajo, ...areasMedio].slice(0, 10);
 
+    const areasBajoValores = areasBajo.map(area => area.numeroSeccion);
+
     // --- FIN NUEVO ---
 
     let numActividades = 0;
     const actividadesSeleccionadas = {};
+    let areasBajoCompletadas = false;
 
     // Inicialización de la interfaz
     contenedorActividades.innerHTML = '';
@@ -71,11 +74,12 @@ function inicializarPlan() {
         if (actividadesArea.length && numActividades < 10) {
             const nuevaFila = document.createElement('div');
             nuevaFila.id = `actividad-fila-${numActividades}`;
+            nuevaFila.setAttribute('data-area', areaSeleccionada);
             nuevaFila.className = 'grid grid-cols-[1fr_1fr_1fr_auto] gap-4 mb-4 items-center';
 
             nuevaFila.innerHTML = `
             <div>
-                <select id="actividad-${numActividades}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline actividad-select">
+                <select id="actividad-${numActividades}" class="shadow appearance-none border rounded w-full py-2 px-3 text-[#7C5C56] leading-tight focus:outline-none focus:shadow-outline actividad-select">
                     <option value="">Selecciona una actividad</option>
                     ${actividadesArea
                     .map(actividad => `<option value="${actividad}">${actividad}</option>`)
@@ -83,10 +87,10 @@ function inicializarPlan() {
                 </select>
             </div>
             <div>
-                <input type="date" id="fecha-inicio-${numActividades}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline fecha-inicio">
+                <input type="date" id="fecha-inicio-${numActividades}" class="shadow appearance-none border rounded w-full py-2 px-3 text-[#7C5C56] leading-tight focus:outline-none focus:shadow-outline fecha-inicio">
             </div>
             <div>
-                <input type="date" id="fecha-fin-${numActividades}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline fecha-fin">
+                <input type="date" id="fecha-fin-${numActividades}" class="shadow appearance-none border rounded w-full py-2 px-3 text-[#7C5C56] leading-tight focus:outline-none focus:shadow-outline fecha-fin">
             </div>
              <div class="flex justify-center">
                 <button class="delete-activity cursor-pointer" data-id="${numActividades}">
@@ -223,6 +227,9 @@ function inicializarPlan() {
         // Guardar todas las actividades en localStorage
         localStorage.setItem('actividadesGuardadas', JSON.stringify(nuevasActividades));
 
+        const areasGuardadas = nuevasActividades.map(act => act.area);
+        areasBajoCompletadas = areasBajo.every(area => areasGuardadas.includes(area.titulo));
+
         // Mostrar la tabla con todas las actividades guardadas
         mostrarTablaActividades();
     } else {
@@ -318,29 +325,39 @@ function inicializarPlan() {
 
     // Manejadores de eventos
     seleccionArea.addEventListener('change', (event) => {
-        const areaSeleccionada = event.target.value;
-        // Detectar si la opción elegida es de rango medio
-        const selectedOption = event.target.selectedOptions[0];
-        const rango = selectedOption ? selectedOption.getAttribute('data-rango') : null;
+    const areaSeleccionada = event.target.value;
+    const selectedOption = event.target.selectedOptions[0];
+    const rango = selectedOption ? selectedOption.getAttribute('data-rango') : null;
 
-        // Si hay opciones de rango bajo aún disponibles en el select, mostrar alerta
-        if (rango === 'medio') {
-            const hayBajo = Array.from(seleccionArea.options).some(
-                opt => opt.getAttribute('data-rango') === 'bajo' && opt.value !== "" && !opt.disabled
-            );
-            if (hayBajo) {
-                mostrarAlerta('Primero debes elegir actividades de las áreas en color rojo.');
-            }
-        }
-
-        agregarActividadBoton.disabled = !areaSeleccionada;
-        if (areaSeleccionada) {
-            contenedorActividades.innerHTML = '';
-            numActividades = 0;
-            Object.keys(actividadesSeleccionadas).forEach(key => delete actividadesSeleccionadas[key]);
-        }
+    // Validación: ¿faltan áreas de rango bajo sin actividad?
+    const actividadesActuales = Array.from(document.querySelectorAll('#contenedor-actividades > div')).map(fila => {
+        return fila.getAttribute('data-area');
     });
+    const faltanBajo = areasBajoValores.some(numSeccion => !actividadesActuales.includes(String(numSeccion)));
 
+    // Solo mostrar la alerta si faltan áreas de rango bajo
+    if (rango === 'medio' && !areasBajoCompletadas) {
+        mostrarAlerta('Primero debes elegir actividades de las áreas en color rojo.');
+        // Detener aquí para que no borre ni habilite nada más
+        return;
+    }
+
+    // Si ya no faltan áreas de rango bajo, puedes deshabilitar las opciones de rango bajo
+    if (!faltanBajo) {
+        Array.from(seleccionArea.options).forEach(opt => {
+            if (opt.getAttribute('data-rango') === 'bajo' && opt.value !== "") {
+                opt.disabled = true;
+            }
+        });
+    }
+
+    agregarActividadBoton.disabled = !areaSeleccionada;
+    if (areaSeleccionada) {
+        contenedorActividades.innerHTML = '';
+        numActividades = 0;
+        Object.keys(actividadesSeleccionadas).forEach(key => delete actividadesSeleccionadas[key]);
+    }
+});
     agregarActividadBoton.addEventListener('click', () => {
         if (seleccionArea.value) {
             crearNuevaFilaActividad(seleccionArea.value);
