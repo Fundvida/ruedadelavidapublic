@@ -13,6 +13,14 @@ function inicializarPlan() {
     const respuestasUsuarioGuardadas = JSON.parse(localStorage.getItem('respuestasUsuario')) || [];
     const cuestionariosFiltrados = JSON.parse(localStorage.getItem('cuestionariosFiltrados')) || [];
     
+    const guardarResultadosBtn = document.getElementById('guardarResultadosBtn');
+    if (guardarResultadosBtn) {
+    guardarResultadosBtn.addEventListener('click', () => {
+        console.log("Redirigiendo a ../guardado.html");
+        window.location.href = '../guardado.html';
+    });
+}
+
     // Determinar el rango de cada área
     let areasBajo = [];
     let areasMedio = [];
@@ -35,7 +43,6 @@ function inicializarPlan() {
     }
     // Unir primero bajo, luego medio, máximo 10
     const areasParaPlan = [...areasBajo, ...areasMedio].slice(0, 10);
-
     const areasBajoValores = areasBajo.map(area => area.numeroSeccion);
 
     // --- FIN NUEVO ---
@@ -218,18 +225,27 @@ function inicializarPlan() {
     });
 
     if (actividades.length > 0) {
-        // Obtener las actividades existentes en localStorage
         const actividadesGuardadas = JSON.parse(localStorage.getItem('actividadesGuardadas')) || [];
-
-        // Combinar las nuevas actividades con las existentes
         const nuevasActividades = [...actividadesGuardadas, ...actividades];
 
-        // Guardar todas las actividades en localStorage
-        localStorage.setItem('actividadesGuardadas', JSON.stringify(nuevasActividades));
+        //localStorage.setItem('actividadesGuardadas', JSON.stringify(nuevasActividades));
+        const actividadesUnicas = [];
+        const actividadesSet = new Set(); // Para almacenar actividades como cadenas y detectar duplicados
 
+        nuevasActividades.forEach(act => {
+            const key = `${act.area}|${act.actividad}|${act.fechaInicio}|${act.fechaFin}`;
+            if (!actividadesSet.has(key)) {
+                actividadesSet.add(key);
+                actividadesUnicas.push(act);
+        }
+    });
+
+    // Guardar
+        localStorage.setItem('actividadesGuardadas', JSON.stringify(actividadesUnicas));
+        
         const areasGuardadas = nuevasActividades.map(act => act.area);
         areasBajoCompletadas = areasBajo.every(area => areasGuardadas.includes(area.titulo));
-
+        
         // Mostrar la tabla con todas las actividades guardadas
         mostrarTablaActividades();
     } else {

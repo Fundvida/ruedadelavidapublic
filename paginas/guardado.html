@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Resultados y Plan de Actividades</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 p-6">
+    <div class="max-w-4xl mx-auto bg-white shadow-md rounded-lg p-6">
+        <h1 class="text-2xl font-bold mb-6 text-center text-gray-800">Tus Resultados y Plan de Actividades</h1>
+
+        <!-- Leyenda simple -->
+        <section class="mb-8">
+            <h2 class="text-xl font-semibold mb-2 text-gray-700">Resumen de Puntajes por Área</h2>
+            <div id="resumen-por-area" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <!-- JS insertará aquí -->
+            </div>
+        </section>
+
+        <!-- Detalles -->
+        <section class="mb-8">
+            <h2 class="text-xl font-semibold mb-2 text-gray-700">Detalles de Puntaje</h2>
+            <div id="resultados-detallados"></div>
+        </section>
+
+        <!-- Actividades -->
+        <section class="mb-8">
+            <h2 class="text-xl font-semibold mb-2 text-gray-700">Plan de Actividades Guardado</h2>
+            <div id="actividades-guardadas"></div>
+        </section>
+
+        <div class="text-center">
+            <button onclick="window.location.href='/'"
+                class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded">
+                Volver al Inicio
+            </button>
+        </div>
+    </div>
+
+    <script type="module" src="./guardado.js"></script>
+</body>
+</html>
