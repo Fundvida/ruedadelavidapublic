@@ -1,8 +1,12 @@
 import { cuestionarios, opciones } from '../../datos/prueba.data.js';
 import { inicializarResultados } from '../../contenido/resultado/resultado.js';
+import { auth, db } from "../../../admin/firebase-config.js";
+import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+import { serverTimestamp, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
 
 let indiceActual = 0;
-const respuestasUsuario = [];
+let respuestasUsuario = JSON.parse(localStorage.getItem('respuestasUsuario')) || [];
 let preguntaAdicionalUsuarioInput;
 let respuestaAdicionalUsuario = null;
 let tituloCuestionario;
@@ -15,7 +19,27 @@ let filaPreguntaAdicional;
 let cuestionariosFiltrados = []; // Array para almacenar los cuestionarios filtrados
 let eventosAdjuntados = false
 
-function iniciarCuestionario() {
+// Función para obtener los resultados más recientes de Firestore para el usuario.
+async function obtenerResultadosMasRecientes(usuarioId) {
+    if (!usuarioId) {
+        return null;
+    }
+    try {
+        const userDocRef = doc(db, "encuesta", usuarioId);
+        const userDoc = await getDoc(userDocRef);
+
+        if (userDoc.exists()) {
+            return userDoc.data();
+        } else {
+            return null; // No hay resultados guardados para este usuario
+        }
+    } catch (error) {
+        console.error("Error al obtener resultados de Firestore:", error);
+        return null;
+    }
+}
+
+async function iniciarCuestionario() {
     const seccionesSeleccionadasNumeros = JSON.parse(localStorage.getItem("seccionesSeleccionadas"));
 
     // Filtrar el array de cuestionarios si hay secciones seleccionadas
@@ -27,6 +51,22 @@ function iniciarCuestionario() {
         // Si no hay secciones seleccionadas, usar todos los cuestionarios
         cuestionariosFiltrados = cuestionarios;
     }
+
+    // Cargar datos de Firebase si hay un usuario logueado
+    await new Promise(resolve => {
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                const resultadosFirestore = await obtenerResultadosMasRecientes(user.uid);
+                if (resultadosFirestore) {
+                    Object.assign(respuestasUsuario, resultadosFirestore.respuestasUsuario || []);
+                    cuestionariosFiltrados = resultadosFirestore.cuestionariosFiltrados || [];
+                    localStorage.setItem('respuestasUsuario', JSON.stringify(respuestasUsuario));
+                    localStorage.setItem('cuestionariosFiltrados', JSON.stringify(cuestionariosFiltrados));
+                }
+            }
+            resolve();
+        });
+    });
 
     // Inicializa todas las áreas para asegurar que existan aunque no se visiten
     for (let i = 0; i < cuestionariosFiltrados.length; i++) {
@@ -202,33 +242,33 @@ function renderizarCuestionario() {
         celda.removeEventListener('click', seleccionarOpcionAdicional);
     });
     // Restaurar pregunta adicional y su opción seleccionada si existe
-if (preguntaAdicionalUsuarioInput) {
-    preguntaAdicionalUsuarioInput.removeEventListener('input', manejarCambioPreguntaAdicional);
-    preguntaAdicionalUsuarioInput.addEventListener('input', manejarCambioPreguntaAdicional);
+    if (preguntaAdicionalUsuarioInput) {
+        preguntaAdicionalUsuarioInput.removeEventListener('input', manejarCambioPreguntaAdicional);
+        preguntaAdicionalUsuarioInput.addEventListener('input', manejarCambioPreguntaAdicional);
 
-    const datosPreguntaAdicional = respuestasUsuario[indiceActual]['preguntaAdicional'];
-    if (datosPreguntaAdicional) {
-        preguntaAdicionalUsuarioInput.value = datosPreguntaAdicional.pregunta;
+        const datosPreguntaAdicional = respuestasUsuario[indiceActual]['preguntaAdicional'];
+        if (datosPreguntaAdicional) {
+            preguntaAdicionalUsuarioInput.value = datosPreguntaAdicional.pregunta;
 
-        // Simular el input para regenerar opciones si hay texto suficiente
-        if (datosPreguntaAdicional.pregunta.length >= 6) {
-            manejarCambioPreguntaAdicional({ target: preguntaAdicionalUsuarioInput });
-            // Esperar un micro-tick para que las celdas estén disponibles y luego marcar la opción seleccionada
-            setTimeout(() => {
-                const opcionesAdicionalesCeldas = filaPreguntaAdicional.querySelectorAll('.opciones-adicionales');
-                opcionesAdicionalesCeldas.forEach(celda => {
-                    if (celda.dataset.opcionTexto === datosPreguntaAdicional.opcion) {
-                        seleccionarOpcionAdicional.call(celda);
-                    }
-                });
-            }, 0);
+            // Simular el input para regenerar opciones si hay texto suficiente
+            if (datosPreguntaAdicional.pregunta.length >= 6) {
+                manejarCambioPreguntaAdicional({ target: preguntaAdicionalUsuarioInput });
+                // Esperar un micro-tick para que las celdas estén disponibles y luego marcar la opción seleccionada
+                setTimeout(() => {
+                    const opcionesAdicionalesCeldas = filaPreguntaAdicional.querySelectorAll('.opciones-adicionales');
+                    opcionesAdicionalesCeldas.forEach(celda => {
+                        if (celda.dataset.opcionTexto === datosPreguntaAdicional.opcion) {
+                            seleccionarOpcionAdicional.call(celda);
+                        }
+                    });
+                }, 0);
+            }
+        } else {
+            preguntaAdicionalUsuarioInput.value = "";
+            deshabilitarOpcionesAdicionales();
+            respuestaAdicionalUsuario = null;
         }
-    } else {
-        preguntaAdicionalUsuarioInput.value = "";
-        deshabilitarOpcionesAdicionales();
-        respuestaAdicionalUsuario = null;
     }
-}
 
 
     cuestionariosFiltrados[indiceActual].preguntas.forEach((pregunta, indicePregunta) => {
@@ -243,7 +283,7 @@ if (preguntaAdicionalUsuarioInput) {
 
             celda.innerHTML = `<span>${opcion.texto}</span>`;
 
-             // Restaurar la selección si ya existe una respuesta guardada
+            // Restaurar la selección si ya existe una respuesta guardada
             const respuestaGuardada = respuestasUsuario[indiceActual][pregunta];
             if (respuestaGuardada && respuestaGuardada.opcion === opcion.texto) {
                 celda.classList.add("bg-[#EDB1B5]", "text-white");
@@ -275,22 +315,22 @@ function reiniciarCuestionario() {
     iniciarCuestionario(); // Volver a iniciar para re-filtrar o mostrar todo
     actualizarBotones();
     if (preguntaAdicionalUsuarioInput) {
-    preguntaAdicionalUsuarioInput.removeEventListener('input', manejarCambioPreguntaAdicional);
-    preguntaAdicionalUsuarioInput.addEventListener('input', manejarCambioPreguntaAdicional);
-    // Restaurar la pregunta adicional si existe para la sección actual
-    if (respuestasUsuario[indiceActual] && respuestasUsuario[indiceActual]['preguntaAdicional']) {
-        preguntaAdicionalUsuarioInput.value = respuestasUsuario[indiceActual]['preguntaAdicional'].pregunta;
-        const opcionesAdicionalesCeldas = filaPreguntaAdicional.querySelectorAll('.opciones-adicionales');
-        opcionesAdicionalesCeldas.forEach(celda => {
-            if (respuestasUsuario[indiceActual]['preguntaAdicional'].opcion && celda.dataset.opcionTexto === respuestasUsuario[indiceActual]['preguntaAdicional'].opcion) {
-                seleccionarOpcionAdicional.call(celda);
-            }
-        });
-    } else {
-        preguntaAdicionalUsuarioInput.value = "";
-        deshabilitarOpcionesAdicionales();
-        respuestaAdicionalUsuario = null;
-      }
+        preguntaAdicionalUsuarioInput.removeEventListener('input', manejarCambioPreguntaAdicional);
+        preguntaAdicionalUsuarioInput.addEventListener('input', manejarCambioPreguntaAdicional);
+        // Restaurar la pregunta adicional si existe para la sección actual
+        if (respuestasUsuario[indiceActual] && respuestasUsuario[indiceActual]['preguntaAdicional']) {
+            preguntaAdicionalUsuarioInput.value = respuestasUsuario[indiceActual]['preguntaAdicional'].pregunta;
+            const opcionesAdicionalesCeldas = filaPreguntaAdicional.querySelectorAll('.opciones-adicionales');
+            opcionesAdicionalesCeldas.forEach(celda => {
+                if (respuestasUsuario[indiceActual]['preguntaAdicional'].opcion && celda.dataset.opcionTexto === respuestasUsuario[indiceActual]['preguntaAdicional'].opcion) {
+                    seleccionarOpcionAdicional.call(celda);
+                }
+            });
+        } else {
+            preguntaAdicionalUsuarioInput.value = "";
+            deshabilitarOpcionesAdicionales();
+            respuestaAdicionalUsuario = null;
+        }
     }
 }
 
@@ -311,7 +351,7 @@ function finalizarCuestionario() {
 
     // Guarda las respuestas del cuestionario actual en localStorage
     localStorage.setItem('respuestasUsuario', JSON.stringify(respuestasUsuario));
-    
+
     const resultadosPorArea = cuestionariosFiltrados.map((cuestionario, idx) => {
         let suma = 0;
         // Si no hay respuestas para esta área, suma será 0
@@ -333,6 +373,31 @@ function finalizarCuestionario() {
 
     localStorage.setItem('resultadosPorArea', JSON.stringify(resultadosPorArea));
     localStorage.setItem('titulosPorArea', JSON.stringify(titulosPorArea));
+
+    onAuthStateChanged(auth, async (user) => {
+        if (user) {
+            // Si hay un usuario logueado, preparamos los datos
+            const datosParaGuardar = {
+                respuestasUsuario: JSON.parse(localStorage.getItem('respuestasUsuario')),
+                cuestionariosFiltrados: JSON.parse(localStorage.getItem('cuestionariosFiltrados')),
+                resultadosPorArea: JSON.parse(localStorage.getItem('resultadosPorArea')),
+                titulosPorArea: JSON.parse(localStorage.getItem('titulosPorArea')),
+                fechaGuardado: serverTimestamp(),
+            };
+
+            try {
+                // Referencia al documento del usuario en la colección 'userResults'
+                // El ID del documento es el UID del usuario
+                const userDocRef = doc(db, "encuesta", user.uid);
+                await setDoc(userDocRef, datosParaGuardar, { merge: true });
+                console.log("Datos del cuestionario (último resultado) guardados/actualizados en Firebase con éxito.");
+            } catch (error) {
+                console.error("Error al guardar datos del cuestionario en Firebase:", error);
+            }
+        } else {
+            console.log("No hay usuario logueado. No se guardarán los resultados del cuestionario en Firebase.");
+        }
+    });
 
     window.loadPage("contenido/resultado/resultado.html", inicializarResultados);
 }

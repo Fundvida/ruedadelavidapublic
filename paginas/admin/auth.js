@@ -20,9 +20,19 @@ loginForm?.addEventListener('submit', async (e) => {
 
   try {
     await signInWithEmailAndPassword(auth, email, password);
-    window.location.href = 'http://127.0.0.1:5500/index.html';
   } catch (error) {
     mostrarError(error.code);
+  }
+});
+
+// ESTADO USUARIO
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    // Si estás en la página de login, redirige a index.html
+    if (window.location.pathname.includes('login.html')) {
+      console.log("Redirigiendo de login.html a index.html...");
+      window.location.href = '/index.html';
+    }
   }
 });
 

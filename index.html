@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
     <link rel="stylesheet" href="./css/menu.css">
     <link rel="stylesheet" href="./css/signal.css">
@@ -17,8 +18,13 @@
 <!--desde el body-->
 
 <body>
-
-    <div class="container">
+    <div class="container mx-auto px-4">
+        <div class="flex justify-between items-center py-3">
+            <a href="/paginas/guardado/guardado.html"
+                class="flex justify-center items-center shadow rounded-full bg-[#e89ca1] w-10 h-10 md:w-14 md:h-14 text-white text-lg">
+                <i class="fas fa-folder"></i>
+            </a>
+        </div>
 
         <div class="nombreApp">
             <label class="nombreApp text-focus-in"> RUEDA DE LA VIDA</label>
@@ -31,90 +37,67 @@
             </div>
         </div>
 
-        <a href="/paginas/conoce/conoce.html" style="text-decoration: none;">
-          <div class="serviceBox">
-            <div class="icon" style="--i: #E89CA1;">
-                <i class="fas fa-question"></i>
-            </div>
-            <div class="content">
-                <h2>CONOCE</h2>
-                <p>
-                    SOBRE LA RUEDA DE LA VIDA
-                </p>
-            </div>
-          </div> <!-- informacion -->
-        </a>
-
-        <a href="/paginas/personaliza/personaliza.html" style="text-decoration: none;">
-          <div class="serviceBox">
-            <div class="icon" style="--i: #E89CA1;">
-                <i class="fas fa-marker"></i>
-            </div>
-            <div class="content">
-                <h2>PERSONALIZA</h2>
-                <p>
-                    TU DISEÑO DE LA RUEDA DE LA VIDA
-                </p>
-            </div>
-          </div> <!--prueba Personaliza -->
-        </a>
-
-        <div id="pruebaContainer">
-            <div href="/paginas/prueba/prueba.html" style="text-decoration: none;">
-                <div class="serviceBox" id="prueba" style="cursor: pointer;">
+        <div class="flex flex-wrap justify-center items-center gap-5">
+            <a href="/paginas/conoce/conoce.html" style="text-decoration: none;">
+                <div class="serviceBox">
                     <div class="icon" style="--i: #E89CA1;">
-                        <i class="fab fa-steam"></i>
+                        <i class="fas fa-question"></i>
                     </div>
                     <div class="content">
-                        <h2>INICIA</h2>
+                        <h2>CONOCE</h2>
                         <p>
-                          
+                            SOBRE LA RUEDA DE LA VIDA
                         </p>
                     </div>
-                    <div class="right" id="hand"></div>
-                </div> <!-- prueba -->
-            </div> 
+                </div> <!-- informacion -->
+            </a>
+
+            <a href="/paginas/personaliza/personaliza.html" style="text-decoration: none;">
+                <div class="serviceBox">
+                    <div class="icon" style="--i: #E89CA1;">
+                        <i class="fas fa-marker"></i>
+                    </div>
+                    <div class="content">
+                        <h2>PERSONALIZA</h2>
+                        <p>
+                            TU DISEÑO DE LA RUEDA DE LA VIDA
+                        </p>
+                    </div>
+                </div> <!--prueba Personaliza -->
+            </a>
+
+            <div id="pruebaContainer">
+                <div href="/paginas/prueba/prueba.html" style="text-decoration: none;">
+                    <div class="serviceBox" id="prueba" style="cursor: pointer;">
+                        <div class="icon" style="--i: #E89CA1;">
+                            <i class="fab fa-steam"></i>
+                        </div>
+                        <div class="content">
+                            <h2>INICIA</h2>
+                            <p>
+
+                            </p>
+                        </div>
+                        <div class="right" id="hand"></div>
+                    </div> <!-- prueba -->
+                </div>
+            </div>
         </div>
-        <!-- <script>
-            if (localStorage.getItem('reload'))
-                localStorage.removeItem('reload');
-            const pruebaContainer = document.getElementById("pruebaContainer");
-            const mensaje = document.querySelector(".mensaje");
 
-            pruebaContainer.addEventListener("mouseenter", function () {
-                mensaje.classList.add("fade-in");
-            });
-
-            pruebaContainer.addEventListener("mouseleave", function () {
-                mensaje.classList.remove("fade-in");
-            });
-        </script> -->
-
-        <!--     <div class="serviceBox" >
-            <div class="icon" style="--i: #37ba82">
-                <a href="#0"></a><i class="fas fa-heart"></i></a>
-            </div>
-            <div class="content"  >
-                <h2>FUNDACIÓN</h2>
-                <p>
-                    Conoce un poco a la "FUNDACIÓN EDUCAR PARA LA VIDA".
-                </p>
-            </div>
-        </div>  Fundacion -->
 
     </div>
     <!-- <script type="module" src="js/fondo.js"></script> -->
     <script>
         document.getElementById('prueba').addEventListener('click', () => {
-        // Borra todo lo necesario
-        localStorage.removeItem('respuestasUsuario');
-        localStorage.removeItem('cuestionariosFiltrados');
-        localStorage.removeItem('resultadosPorArea'); // Si usas un key específico para la rueda
-        localStorage.removeItem('otroDato'); // Agrega aquí cualquier otra clave que quieras borrar
+            // Borra todo lo necesario
+            localStorage.removeItem('respuestasUsuario');
+            localStorage.removeItem('cuestionariosFiltrados');
+            localStorage.removeItem('resultadosPorArea'); // Si usas un key específico para la rueda
+            localStorage.removeItem('otroDato'); // Agrega aquí cualquier otra clave que quieras borrar
 
-        // Redirige a la página del cuestionario
-        window.location.href = "/paginas/prueba/prueba.html";
-    });
+            // Redirige a la página del cuestionario
+            window.location.href = "/paginas/prueba/prueba.html";
+        });
     </script>
 
 </body>

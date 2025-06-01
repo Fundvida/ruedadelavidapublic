@@ -1,8 +1,10 @@
 import actividadesPorArea from '../../datos/plan.data.js';
-
+import { auth, db } from '../../../admin/firebase-config.js';
+import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+import { collection, addDoc, serverTimestamp, query, where, getDocs, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
 function inicializarPlan() {
-    localStorage.removeItem('actividadesGuardadas');
+    // localStorage.removeItem('actividadesGuardadas');
     const seleccionArea = document.getElementById('seleccion-area');
     const listaActividades = document.getElementById('lista-actividades');
     const agregarActividadBoton = document.getElementById('agregar-actividad');
@@ -10,16 +12,91 @@ function inicializarPlan() {
     const contenedorActividades = document.getElementById('contenedor-actividades');
 
     // --- NUEVO: Calcular áreas de rango bajo y medio ---
-    const respuestasUsuarioGuardadas = JSON.parse(localStorage.getItem('respuestasUsuario')) || [];
-    const cuestionariosFiltrados = JSON.parse(localStorage.getItem('cuestionariosFiltrados')) || [];
-    
+    let respuestasUsuarioGuardadas = JSON.parse(localStorage.getItem('respuestasUsuario')) || [];
+    let cuestionariosFiltrados = JSON.parse(localStorage.getItem('cuestionariosFiltrados')) || [];
+    let actividadesGuardadas = JSON.parse(localStorage.getItem('actividadesGuardadas')) || [];
+
     const guardarResultadosBtn = document.getElementById('guardarResultadosBtn');
-    if (guardarResultadosBtn) {
-    guardarResultadosBtn.addEventListener('click', () => {
-        console.log("Redirigiendo a ../guardado.html");
-        window.location.href = '../guardado.html';
+
+    let usuario = null;
+
+    // --- Autenticación y Carga de Datos desde Firebase ---
+    onAuthStateChanged(auth, async (user) => {
+        usuario = user;
+        if (user) {
+            console.log("Usuario logeado:", usuario.uid);
+            await cargarDatosUsuarioDesdeFirebase(user.uid);
+            mostrarTablaActividades(); // Actualiza la UI con los datos cargados/existentes
+        } else {
+            console.log("No hay usuario logeado.");
+            // Si no hay usuario, asegura que se muestren los datos locales si existen
+            mostrarTablaActividades();
+        }
     });
-}
+
+    if (guardarResultadosBtn) {
+        guardarResultadosBtn.addEventListener('click', async () => {
+            if (!usuario) {
+                console.error("Intento de guardar sin usuario logeado.");
+                return;
+            }
+
+            try {
+                const datosParaGuardar = {
+                    usuarioId: usuario.uid,
+                    respuestasUsuario: respuestasUsuarioGuardadas,
+                    cuestionariosFiltrados: cuestionariosFiltrados,
+                    actividadesGuardadas: JSON.parse(localStorage.getItem('actividadesGuardadas')) || [],
+                    fechaGuardado: serverTimestamp(), // Esto guarda la fecha y hora del servidor de Firebase
+                };
+
+                await addDoc(collection(db, "resultados"), datosParaGuardar);
+
+                console.log("Redirigiendo a /paginas/guardado/guardado.html");
+                window.location.href = '/paginas/guardado/guardado.html';
+
+            } catch (error) {
+                console.error("Error al guardar los resultados:", error);
+            }
+        });
+    }
+
+    async function cargarDatosUsuarioDesdeFirebase(uid) {
+        if (respuestasUsuarioGuardadas.length === 0 || cuestionariosFiltrados.length === 0 || actividadesGuardadas.length === 0) {
+            try {
+                const q = query(
+                    collection(db, "resultados"),
+                    where("usuarioId", "==", uid),
+                    orderBy("fechaGuardado", "desc"),
+                    limit(1)
+                );
+                const userDoc = await getDocs(q);
+
+                if (!userDoc.empty) {
+                    const data = userDoc.docs[0].data();
+                    if (data.respuestasUsuario && respuestasUsuarioGuardadas.length === 0) {
+                        localStorage.setItem('respuestasUsuario', JSON.stringify(data.respuestasUsuario));
+                        respuestasUsuarioGuardadas = data.respuestasUsuario;
+                    }
+                    if (data.cuestionariosFiltrados && cuestionariosFiltrados.length === 0) {
+                        localStorage.setItem('cuestionariosFiltrados', JSON.stringify(data.cuestionariosFiltrados));
+                        cuestionariosFiltrados = data.cuestionariosFiltrados;
+                    }
+                    if (data.actividadesGuardadas && actividadesGuardadas.length === 0) {
+                        localStorage.setItem('actividadesGuardadas', JSON.stringify(data.actividadesGuardadas));
+                        actividadesGuardadas = data.actividadesGuardadas;
+                    }
+                    console.log("Datos cargados desde Firebase.");
+                } else {
+                    console.log("No hay datos de usuario en Firebase para cargar.");
+                }
+            } catch (error) {
+                console.error("Error al cargar datos de Firebase:", error);
+            }
+        } else {
+            console.log("Datos ya existen en localStorage, no se carga de Firebase.");
+        }
+    }
 
     // Determinar el rango de cada área
     let areasBajo = [];
@@ -61,11 +138,11 @@ function inicializarPlan() {
         opcion.value = area.numeroSeccion;
         opcion.textContent = area.titulo;
         // Marcar las opciones de rango medio con un atributo personalizado
-    if (areasMedio.includes(area)) {
-        opcion.setAttribute('data-rango', 'medio');
-    } else {
-        opcion.setAttribute('data-rango', 'bajo');
-    }
+        if (areasMedio.includes(area)) {
+            opcion.setAttribute('data-rango', 'medio');
+        } else {
+            opcion.setAttribute('data-rango', 'bajo');
+        }
         seleccionArea.appendChild(opcion);
     });
 
@@ -198,8 +275,8 @@ function inicializarPlan() {
     }
 
     function mostrarAlerta(mensaje) {
-    const alertContainer = document.getElementById("alert-container"); // Asegúrate de tener un contenedor con este ID en tu HTML
-    alertContainer.innerHTML = `
+        const alertContainer = document.getElementById("alert-container"); // Asegúrate de tener un contenedor con este ID en tu HTML
+        alertContainer.innerHTML = `
         <div class="bg-red-100 border border-red-200 text-red-700 pl-5 pr-10 py-3 rounded relative" role="alert">
             <span class="block sm:inline">${mensaje}</span>
             <button type="button" class="absolute top-0 bottom-0 right-0 px-4 py-3" onclick="this.parentNode.remove()">
@@ -207,68 +284,68 @@ function inicializarPlan() {
             </button>
         </div>
     `;
-}
+    }
 
     function guardarActividades() {
-    const actividades = [];
-    const filas = document.querySelectorAll('#contenedor-actividades > div');
+        const actividades = [];
+        const filas = document.querySelectorAll('#contenedor-actividades > div');
 
-    filas.forEach(fila => {
-        const actividad = fila.querySelector('.actividad-select').value;
-        const fechaInicio = fila.querySelector('.fecha-inicio').value;
-        const fechaFin = fila.querySelector('.fecha-fin').value;
-        const area = seleccionArea.options[seleccionArea.selectedIndex].text; // Obtener el área seleccionada
+        filas.forEach(fila => {
+            const actividad = fila.querySelector('.actividad-select').value;
+            const fechaInicio = fila.querySelector('.fecha-inicio').value;
+            const fechaFin = fila.querySelector('.fecha-fin').value;
+            const area = seleccionArea.options[seleccionArea.selectedIndex].text; // Obtener el área seleccionada
 
-        if (actividad && fechaInicio && fechaFin) {
-            actividades.push({ area, actividad, fechaInicio, fechaFin });
+            if (actividad && fechaInicio && fechaFin) {
+                actividades.push({ area, actividad, fechaInicio, fechaFin });
+            }
+        });
+
+        if (actividades.length > 0) {
+            const actividadesGuardadas = JSON.parse(localStorage.getItem('actividadesGuardadas')) || [];
+            const nuevasActividades = [...actividadesGuardadas, ...actividades];
+
+            //localStorage.setItem('actividadesGuardadas', JSON.stringify(nuevasActividades));
+            const actividadesUnicas = [];
+            const actividadesSet = new Set(); // Para almacenar actividades como cadenas y detectar duplicados
+
+            nuevasActividades.forEach(act => {
+                const key = `${act.area}|${act.actividad}|${act.fechaInicio}|${act.fechaFin}`;
+                if (!actividadesSet.has(key)) {
+                    actividadesSet.add(key);
+                    actividadesUnicas.push(act);
+                }
+            });
+
+            // Guardar
+            localStorage.setItem('actividadesGuardadas', JSON.stringify(actividadesUnicas));
+
+            const areasGuardadas = nuevasActividades.map(act => act.area);
+            areasBajoCompletadas = areasBajo.every(area => areasGuardadas.includes(area.titulo));
+
+            // Mostrar la tabla con todas las actividades guardadas
+            mostrarTablaActividades();
+        } else {
+            mostrarAlerta('Debes elegir una fecha para la actividad.');
         }
-    });
-
-    if (actividades.length > 0) {
-        const actividadesGuardadas = JSON.parse(localStorage.getItem('actividadesGuardadas')) || [];
-        const nuevasActividades = [...actividadesGuardadas, ...actividades];
-
-        //localStorage.setItem('actividadesGuardadas', JSON.stringify(nuevasActividades));
-        const actividadesUnicas = [];
-        const actividadesSet = new Set(); // Para almacenar actividades como cadenas y detectar duplicados
-
-        nuevasActividades.forEach(act => {
-            const key = `${act.area}|${act.actividad}|${act.fechaInicio}|${act.fechaFin}`;
-            if (!actividadesSet.has(key)) {
-                actividadesSet.add(key);
-                actividadesUnicas.push(act);
-        }
-    });
-
-    // Guardar
-        localStorage.setItem('actividadesGuardadas', JSON.stringify(actividadesUnicas));
-        
-        const areasGuardadas = nuevasActividades.map(act => act.area);
-        areasBajoCompletadas = areasBajo.every(area => areasGuardadas.includes(area.titulo));
-        
-        // Mostrar la tabla con todas las actividades guardadas
-        mostrarTablaActividades();
-    } else {
-        mostrarAlerta('Debes elegir una fecha para la actividad.');
     }
-}
 
     function mostrarTablaActividades(actividades) {
         // Obtener las actividades guardadas del localStorage
         const actividadesGuardadas = JSON.parse(localStorage.getItem('actividadesGuardadas')) || [];
 
-    // Eliminar cualquier tabla existente antes de crear una nueva
-    const tablaExistente = document.querySelector('#tabla-actividades');
-    if (tablaExistente) {
-        tablaExistente.remove();
-    }
+        // Eliminar cualquier tabla existente antes de crear una nueva
+        const tablaExistente = document.querySelector('#tabla-actividades');
+        if (tablaExistente) {
+            tablaExistente.remove();
+        }
 
-    // Crear la tabla
-    const tabla = document.createElement('table');
-    tabla.id = 'tabla-actividades'; // Asignar un ID para evitar duplicados
-    tabla.className = 'w-full mt-4 border-collapse border border-gray-300';
+        // Crear la tabla
+        const tabla = document.createElement('table');
+        tabla.id = 'tabla-actividades'; // Asignar un ID para evitar duplicados
+        tabla.className = 'w-full mt-4 border-collapse border border-gray-300';
 
-    const encabezado = `
+        const encabezado = `
         <thead>
             <tr>
                 <th class="border border-gray-300 px-4 py-2">Área</th>
@@ -279,7 +356,7 @@ function inicializarPlan() {
         </thead>
     `;
 
-    const cuerpo = actividadesGuardadas.map(act => `
+        const cuerpo = actividadesGuardadas.map(act => `
         <tr>
             <td class="border border-gray-300 px-4 py-2">${act.area}</td>
             <td class="border border-gray-300 px-4 py-2">${act.actividad}</td>
@@ -288,92 +365,89 @@ function inicializarPlan() {
         </tr>
     `).join('');
 
-    tabla.innerHTML = encabezado + `<tbody>${cuerpo}</tbody>`;
+        tabla.innerHTML = encabezado + `<tbody>${cuerpo}</tbody>`;
 
-    // Agregar la tabla al DOM
-    listaActividades.appendChild(tabla);
+        // Agregar la tabla al DOM
+        listaActividades.appendChild(tabla);
 
-    // Mostrar los botones de descarga
-    const botonesDescarga = document.getElementById('botones-descarga');
-    if (botonesDescarga) {
-        botonesDescarga.style.display = 'flex';
+        // Mostrar los botones de descarga
+        const botonesDescarga = document.getElementById('botones-descarga');
+        if (botonesDescarga) {
+            botonesDescarga.style.display = 'flex';
+        }
     }
-}
-    // Mostrar la tabla al cargar la página
-    document.addEventListener('DOMContentLoaded', mostrarTablaActividades);
-
 
     // Manejador del botón "Guardar Actividades"
     guardarActividadBoton.addEventListener('click', guardarActividades);
 
     // Descargar tabla como Excel
     document.getElementById('descargar-excel').addEventListener('click', () => {
-    const actividadesGuardadas = JSON.parse(localStorage.getItem('actividadesGuardadas')) || [];
-    if (actividadesGuardadas.length === 0) return;
+        const actividadesGuardadas = JSON.parse(localStorage.getItem('actividadesGuardadas')) || [];
+        if (actividadesGuardadas.length === 0) return;
 
-    // Crear hoja de cálculo
-    const ws = XLSX.utils.json_to_sheet(actividadesGuardadas);
-    const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, "Actividades");
+        // Crear hoja de cálculo
+        const ws = XLSX.utils.json_to_sheet(actividadesGuardadas);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "Actividades");
 
-    // Descargar archivo
-    XLSX.writeFile(wb, "actividades.xlsx");
-});
-
-// Descargar tabla como PDF
-    document.getElementById('descargar-pdf').addEventListener('click', () => {
-    const tabla = document.getElementById('tabla-actividades');
-    if (!tabla) return;
-
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF();
-    doc.autoTable({
-        html: '#tabla-actividades',
-        theme: 'striped',
-        headStyles: { fillColor: [233, 156, 161] }, // color rosado suave
-        styles: { fontSize: 10, cellPadding: 3 },
-        margin: { top: 20 }
+        // Descargar archivo
+        XLSX.writeFile(wb, "actividades.xlsx");
     });
 
-     doc.save('actividades.pdf');
-});
+    // Descargar tabla como PDF
+    document.getElementById('descargar-pdf').addEventListener('click', () => {
+        const tabla = document.getElementById('tabla-actividades');
+        if (!tabla) return;
+
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+        doc.autoTable({
+            html: '#tabla-actividades',
+            theme: 'striped',
+            headStyles: { fillColor: [233, 156, 161] }, // color rosado suave
+            styles: { fontSize: 10, cellPadding: 3 },
+            margin: { top: 20 }
+        });
+
+        doc.save('actividades.pdf');
+    });
 
 
     // Manejadores de eventos
     seleccionArea.addEventListener('change', (event) => {
-    const areaSeleccionada = event.target.value;
-    const selectedOption = event.target.selectedOptions[0];
-    const rango = selectedOption ? selectedOption.getAttribute('data-rango') : null;
+        const areaSeleccionada = event.target.value;
+        const selectedOption = event.target.selectedOptions[0];
+        const rango = selectedOption ? selectedOption.getAttribute('data-rango') : null;
 
-    // Validación: ¿faltan áreas de rango bajo sin actividad?
-    const actividadesActuales = Array.from(document.querySelectorAll('#contenedor-actividades > div')).map(fila => {
-        return fila.getAttribute('data-area');
-    });
-    const faltanBajo = areasBajoValores.some(numSeccion => !actividadesActuales.includes(String(numSeccion)));
-
-    // Solo mostrar la alerta si faltan áreas de rango bajo
-    if (rango === 'medio' && !areasBajoCompletadas) {
-        mostrarAlerta('Primero debes elegir actividades de las áreas en color rojo.');
-        // Detener aquí para que no borre ni habilite nada más
-        return;
-    }
-
-    // Si ya no faltan áreas de rango bajo, puedes deshabilitar las opciones de rango bajo
-    if (!faltanBajo) {
-        Array.from(seleccionArea.options).forEach(opt => {
-            if (opt.getAttribute('data-rango') === 'bajo' && opt.value !== "") {
-                opt.disabled = true;
-            }
+        // Validación: ¿faltan áreas de rango bajo sin actividad?
+        const actividadesActuales = Array.from(document.querySelectorAll('#contenedor-actividades > div')).map(fila => {
+            return fila.getAttribute('data-area');
         });
-    }
+        const faltanBajo = areasBajoValores.some(numSeccion => !actividadesActuales.includes(String(numSeccion)));
 
-    agregarActividadBoton.disabled = !areaSeleccionada;
-    if (areaSeleccionada) {
-        contenedorActividades.innerHTML = '';
-        numActividades = 0;
-        Object.keys(actividadesSeleccionadas).forEach(key => delete actividadesSeleccionadas[key]);
-    }
-});
+        // Solo mostrar la alerta si faltan áreas de rango bajo
+        if (rango === 'medio' && !areasBajoCompletadas) {
+            mostrarAlerta('Primero debes elegir actividades de las áreas en color rojo.');
+            // Detener aquí para que no borre ni habilite nada más
+            return;
+        }
+
+        // Si ya no faltan áreas de rango bajo, puedes deshabilitar las opciones de rango bajo
+        if (!faltanBajo) {
+            Array.from(seleccionArea.options).forEach(opt => {
+                if (opt.getAttribute('data-rango') === 'bajo' && opt.value !== "") {
+                    opt.disabled = true;
+                }
+            });
+        }
+
+        agregarActividadBoton.disabled = !areaSeleccionada;
+        if (areaSeleccionada) {
+            contenedorActividades.innerHTML = '';
+            numActividades = 0;
+            Object.keys(actividadesSeleccionadas).forEach(key => delete actividadesSeleccionadas[key]);
+        }
+    });
     agregarActividadBoton.addEventListener('click', () => {
         if (seleccionArea.value) {
             crearNuevaFilaActividad(seleccionArea.value);

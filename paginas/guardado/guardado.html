@@ -1,14 +1,26 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
-    <title>Resultados y Plan de Actividades</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resultados y Plan de Actividades</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
+
 <body class="bg-gray-100 p-6">
     <div class="max-w-4xl mx-auto bg-white shadow-md rounded-lg p-6">
         <h1 class="text-2xl font-bold mb-6 text-center text-gray-800">Tus Resultados y Plan de Actividades</h1>
+
+        <div id="auth-buttons-container" class="flex justify-center gap-4 mb-6">
+            <button id="login-btn"
+                class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-6 rounded hidden">
+                Iniciar Sesión
+            </button>
+            <button id="logout-btn" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-6 rounded hidden">
+                Cerrar Sesión
+            </button>
+        </div>
 
         <!-- Leyenda simple -->
         <section class="mb-8">
@@ -38,6 +50,7 @@
         </div>
     </div>
 
-    <script type="module" src="./guardado.js"></script>
+    <script src="./guardado.js" type="module"></script>
 </body>
+
 </html>

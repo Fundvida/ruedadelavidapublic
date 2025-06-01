@@ -2,6 +2,7 @@ function inicializarResultados() {
     generarGraficoPizza();
     generarLeyendaPizza();
     generarGraficoRadar();
+    marcarIcono();
 }
 
 function generarGraficoPizza() {
@@ -42,13 +43,13 @@ function generarGraficoPizza() {
     // Usa la cantidad real de áreas (mínimo 8, máximo 12)
     const cantidad = Math.max(8, Math.min(titulosPorArea.length, 12));
     const labels = titulosPorArea.slice(0, cantidad).map(label => {
-    if (label.length > 15 && label.includes(' ')) {
-        const palabras = label.split(' ');
-        const mitad = Math.ceil(palabras.length / 2);
-        return palabras.slice(0, mitad).join(' ') + '\n' + palabras.slice(mitad).join(' ');
-    }
-    return label;
-});
+        if (label.length > 15 && label.includes(' ')) {
+            const palabras = label.split(' ');
+            const mitad = Math.ceil(palabras.length / 2);
+            return palabras.slice(0, mitad).join(' ') + '\n' + palabras.slice(mitad).join(' ');
+        }
+        return label;
+    });
 
 
     const resultadosReales = resultadosPorArea.slice(0, cantidad).map(valor => valor || 0); // Asegura que no haya valores undefined
@@ -97,7 +98,7 @@ function generarGraficoPizza() {
         type: 'pie',
         data: data,
         options: {
-            responsive: true, 
+            responsive: true,
             maintainAspectRatio: false,
             plugins: {
                 legend: {
@@ -117,10 +118,10 @@ function generarGraficoPizza() {
                     display: true,
                     color: '#fff',
                     font: function(context) {
-                    return context.chart.canvas.clientWidth < 400
-                        ? { weight: 'bold', size: 7 } // Celular
-                        : { weight: 'bold', size: 12 }; // Escritorio
-                    },  
+                        return context.chart.canvas.clientWidth < 400
+                            ? { weight: 'bold', size: 7 } // Celular
+                            : { weight: 'bold', size: 12 }; // Escritorio
+                    },
                     anchor: 'center',
                     align: 'end',
                     formatter: function(value, context) {
@@ -141,7 +142,7 @@ function generarGraficoRadar() {
         console.error('Elemento con ID "radar-chart" no encontrado.');
         return;
     }
-    
+
     const dataRadar = {
         labels: window.pizzaChartData.labels,
         datasets: [{
@@ -157,49 +158,49 @@ function generarGraficoRadar() {
     };
 
     const optionsRadar = {
-    responsive: true,
-    maintainAspectRatio: false,
-    scales: {
-        r: {
-            angleLines: {
-                display: false // Oculta las líneas de los ángulos
-            },
-            grid: {
-                display: false // Oculta la red de araña
-            },
-            suggestedMin: 0,
-            suggestedMax: 10,  // Ajusta según el rango de tus datos
-            ticks: {
-                display: false // Oculta los números del eje
-            },
-            pointLabels: {  
-                display: false,
-                color: '#7c5a36', 
-                font: {
-                    size: 12  
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+            r: {
+                angleLines: {
+                    display: false // Oculta las líneas de los ángulos
+                },
+                grid: {
+                    display: false // Oculta la red de araña
+                },
+                suggestedMin: 0,
+                suggestedMax: 10,  // Ajusta según el rango de tus datos
+                ticks: {
+                    display: false // Oculta los números del eje
+                },
+                pointLabels: {
+                    display: false,
+                    color: '#7c5a36',
+                    font: {
+                        size: 12
+                    }
+                },
             }
-            },
-        }
-    },
-    plugins: {
-        legend: {
-            display: false
         },
-        datalabels: {
-            display: true, // <-- ACTIVAR etiquetas en los vértices
-            anchor: 'end',  
-            align: 'end',    
-            font: {
-                size: 18,
-                weight: 'bold'
+        plugins: {
+            legend: {
+                display: false
             },
-            color: '#050506',     // Color de la etiqueta
-            formatter: function(value) {
+            datalabels: {
+                display: true, // <-- ACTIVAR etiquetas en los vértices
+                anchor: 'end',
+                align: 'end',
+                font: {
+                    size: 18,
+                    weight: 'bold'
+                },
+                color: '#050506',     // Color de la etiqueta
+                formatter: function(value) {
                     return value;
+                }
             }
         }
-    }
-};
+    };
 
     window.radarChartInstance = new Chart(ctxRadar, {
         type: 'radar',
@@ -228,24 +229,24 @@ function generarLeyendaPizza() {
 
     // URLs de los íconos en el mismo orden que los títulos
     const iconMap = {
-    "CONTRIBUCION SOCIAL": "https://cdn.lordicon.com/oncyjozz.json",
-    "OCIO": "https://cdn.lordicon.com/mxddzdmt.json",
-    "SALUD": "https://cdn.lordicon.com/fdaaenax.json",
-    "FAMILIA": "https://cdn.lordicon.com/kjkiqtxg.json",
-    "AMISTADES": "https://cdn.lordicon.com/xhbsnkyp.json",
-    "PAREJA": "https://cdn.lordicon.com/hqrgkqvs.json",
-    "HOGAR": "https://cdn.lordicon.com/etqbfrgp.json",
-    "CRECIMIENTO PERSONAL": "https://cdn.lordicon.com/xxdqfhbi.json",
-    "EDUCACIÓN": "https://cdn.lordicon.com/ttioogfl.json",
-    "ESPIRITUALIDAD": "https://cdn.lordicon.com/jluicbpf.json",
-    "ECONOMÍA": "https://cdn.lordicon.com/hbwqfgcf.json",
-    "TRABAJO": "https://cdn.lordicon.com/pqxdilfs.json"
-};
+        "CONTRIBUCION SOCIAL": "https://cdn.lordicon.com/oncyjozz.json",
+        "OCIO": "https://cdn.lordicon.com/mxddzdmt.json",
+        "SALUD": "https://cdn.lordicon.com/fdaaenax.json",
+        "FAMILIA": "https://cdn.lordicon.com/kjkiqtxg.json",
+        "AMISTADES": "https://cdn.lordicon.com/xhbsnkyp.json",
+        "PAREJA": "https://cdn.lordicon.com/hqrgkqvs.json",
+        "HOGAR": "https://cdn.lordicon.com/etqbfrgp.json",
+        "CRECIMIENTO PERSONAL": "https://cdn.lordicon.com/xxdqfhbi.json",
+        "EDUCACIÓN": "https://cdn.lordicon.com/ttioogfl.json",
+        "ESPIRITUALIDAD": "https://cdn.lordicon.com/jluicbpf.json",
+        "ECONOMÍA": "https://cdn.lordicon.com/hbwqfgcf.json",
+        "TRABAJO": "https://cdn.lordicon.com/pqxdilfs.json"
+    };
 
-const iconUrlsReordenados = window.pizzaChartData.labels.map(label => {
+    const iconUrlsReordenados = window.pizzaChartData.labels.map(label => {
         const labelUpper = label.replace(/\s+/g, ' ').replace(/\n/g, ' ').trim().toUpperCase();
-    return iconMap[labelUpper] || null; // O un ícono por defecto
-});
+        return iconMap[labelUpper] || null; // O un ícono por defecto
+    });
 
     // Generar los elementos de la leyenda
     window.pizzaChartData.labels.forEach((label, i) => {
@@ -303,6 +304,46 @@ const iconUrlsReordenados = window.pizzaChartData.labels.map(label => {
         // Añadir el contenedor principal a la leyenda
         legendContainer.appendChild(container);
     });
+}
+
+function marcarIcono() {
+    // Busca el icono de referencia (fa-chart-pie) para encontrar su contenedor.
+    const iconoReferencia = document.querySelector('.fa-solid.fa-chart-pie');
+
+    if (iconoReferencia) {
+        // Obtiene el 'div' padre inmediato del icono de referencia.
+        const divPadreReferencia = iconoReferencia.parentElement;
+
+        if (divPadreReferencia && divPadreReferencia.tagName === 'DIV') {
+            // Encuentra el contenedor común que agrupa a todos los 'div's hermanos.
+            const contenedorComun = divPadreReferencia.parentElement;
+
+            if (contenedorComun) {
+                // Selecciona todos los elementos 'div' que son hijos directos de este contenedor común.
+                const divsHermanos = contenedorComun.querySelectorAll('div');
+
+                // Itera sobre cada uno de estos 'div's hermanos.
+                divsHermanos.forEach(divActual => {
+                    // Busca un icono (etiqueta <i>) dentro del 'div' actual.
+                    const iconoInterno = divActual.querySelector('i');
+
+                    // Aplica lógica solo si este 'div' contiene un icono.
+                    if (iconoInterno) {
+                        // Lógica específica si el icono NO es fa-chart-pie.
+                        if (!iconoInterno.classList.contains('fa-chart-pie')) {
+                            divActual.classList.remove('bg-[#e89ca1]', 'text-white');
+                            divActual.classList.add('bg-[#454e56]', 'text-gray-200');
+                        }
+                        // Lógica para el div que SÍ contiene el icono fa-chart-pie (el original).
+                        if (iconoInterno.classList.contains('fa-chart-pie')) {
+                            divActual.classList.remove('bg-[#454e56]', 'text-gray-200');
+                            divActual.classList.add('bg-[#e89ca1]', 'text-white');
+                        }
+                    }
+                });
+            }
+        }
+    }
 }
 
 export { inicializarResultados };
