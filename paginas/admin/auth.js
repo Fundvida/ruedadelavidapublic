@@ -42,9 +42,20 @@ registerForm?.addEventListener('submit', async (e) => {
   const email = document.getElementById('registerEmail')?.value;
   const password = document.getElementById('registerPassword')?.value;
 
+  if (!password || password.length < 6) {
+    errorMessage.textContent = "La contraseña debe tener al menos 6 caracteres.";
+    errorMessage.style.display = 'block';
+    errorMessage.classList.remove('text-green-600');
+    errorMessage.classList.add('text-red-500');
+    return;
+  }
+
   try {
     await createUserWithEmailAndPassword(auth, email, password);
-    alert("Usuario registrado. Ahora puedes iniciar sesión.");
+    errorMessage.textContent = "Usuario registrado. Ahora puedes iniciar sesión.";
+    errorMessage.style.display = 'block';
+    errorMessage.classList.remove('text-red-500');
+    errorMessage.classList.add('text-green-600');
     registerForm.classList.add('hidden');
     loginForm.classList.remove('hidden');
   } catch (error) {
@@ -52,15 +63,23 @@ registerForm?.addEventListener('submit', async (e) => {
   }
 });
 
+function limpiarMensaje() {
+  errorMessage.textContent = '';
+  errorMessage.style.display = 'none';
+  errorMessage.classList.remove('text-green-600', 'text-red-500');
+}
+
 // CAMBIAR ENTRE FORMULARIOS
 toggleRegister?.addEventListener('click', (e) => {
   e.preventDefault();
+  limpiarMensaje();
   loginForm.classList.add('hidden');
   registerForm.classList.remove('hidden');
 });
 
 cancelRegister?.addEventListener('click', (e) => {
   e.preventDefault();
+  limpiarMensaje();
   registerForm.classList.add('hidden');
   loginForm.classList.remove('hidden');
 });

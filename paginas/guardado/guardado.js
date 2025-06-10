@@ -89,12 +89,18 @@ document.addEventListener("DOMContentLoaded", async function () {
             });
         }
 
+        const coloresBase = [
+        "#B85C74", "#D1788C", "#E89CA1", "#EC729C", "#F7A1B5", "#F9C5D5",
+        "#3E4660", "#505B80", "#5A668E", "#6A749F", "#9BA2C2", "#B3B9D1"
+    ];
+
 
         // Mostrar resumen por área (leyenda sencilla)
         if (resumenDiv && titulosPorArea.length > 0) {
             resumenDiv.innerHTML = titulosPorArea.map((titulo, i) => `
-                <div class="p-4 bg-gray-50 border rounded shadow-sm text-gray-700">
-                    <strong>${titulo}:</strong> ${resultadosPorArea[i]} puntos
+                 <div class="p-4 bg-[#fbf1f1] border rounded shadow-sm flex items-center gap-2">
+                <strong style="color: ${coloresBase[i % coloresBase.length]};">${titulo}:</strong>
+                <span class="ml-2 text-[#505B80] font-semibold">${resultadosPorArea[i]} puntos</span>
                 </div>
             `).join('');
         } else if (resumenDiv) {
@@ -103,12 +109,12 @@ document.addEventListener("DOMContentLoaded", async function () {
 
         // Mostrar resultados detallados
         if (detallesDiv && cuestionariosFiltrados.length > 0) {
-            let html = '<ul class="list-disc pl-5 space-y-4">';
+            let html = '<ul class="list-none space-y-4">';
             cuestionariosFiltrados.forEach((cuestionario, idx) => {
                 const respuestas = respuestasUsuario[idx] || {};
                 const puntajeTotal = resultadosPorArea[idx];
 
-                html += `<li><strong class="text-gray-800">${cuestionario.titulo}:</strong> ${puntajeTotal} puntos<ul class="list-disc pl-6 text-sm text-gray-600">`;
+                html += `<li><strong class="text-[#E89CA1]">${cuestionario.titulo}:</strong> ${puntajeTotal} puntos<ul class="list-none text-sm text-gray-600">`;
 
                 cuestionario.preguntas.forEach(pregunta => {
                     const r = respuestas[pregunta];
@@ -132,13 +138,13 @@ document.addEventListener("DOMContentLoaded", async function () {
         if (actividadesDiv && actividadesGuardadas.length > 0) {
             let html = `
                 <div class="overflow-x-auto">
-                    <table class="table-auto w-full text-sm border border-gray-300">
-                        <thead class="bg-gray-100">
+                    <table class="table-auto w-full text-sm border border-[#ceb79d]">
+                        <thead class="bg-[#ceb79d]">
                             <tr>
-                                <th class="p-2 border">Área</th>
-                                <th class="p-2 border">Actividad</th>
-                                <th class="p-2 border">Fecha Inicio</th>
-                                <th class="p-2 border">Fecha Fin</th>
+                                <th class="p-2 border-[#ceb79d] text-[#fff]">Área</th>
+                                <th class="p-2 border-[#ceb79d] text-[#fff]">Actividad</th>
+                                <th class="p-2 border-[#ceb79d] text-[#fff]">Fecha Inicio</th>
+                                <th class="p-2 border-[#ceb79d] text-[#fff]">Fecha Fin</th>
                             </tr>
                         </thead>
                         <tbody>

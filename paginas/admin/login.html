@@ -9,34 +9,34 @@
 <body class="bg-gray-100 h-screen flex justify-center items-center">
     <div class="bg-white p-8 rounded shadow-md w-96">
         <form id="loginForm" class="space-y-4">
-            <h1 class="text-2xl font-semibold mb-6 text-center text-gray-800">Iniciar Sesión</h1>
+            <h1 class="text-2xl font-semibold mb-6 text-center text-[#505B80]">Iniciar Sesión</h1>
             <div>
-                <label for="email" class="block text-gray-700 text-sm font-bold mb-2">Correo Electrónico:</label>
+                <label for="email" class="block text-[#505B80] text-sm font-bold mb-2">Correo Electrónico:</label>
                 <input type="email" id="email" name="email" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
             </div>
             <div>
-                <label for="password" class="block text-gray-700 text-sm font-bold mb-2">Contraseña:</label>
+                <label for="password" class="block text-[#505B80] text-sm font-bold mb-2">Contraseña:</label>
                 <input type="password" id="password" name="password" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
             </div>
-            <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full">Entrar</button>
-            <p id="errorMessage" class="text-red-500 text-sm italic" style="display: none;"></p>
-            <p class="mt-4 text-center text-gray-600 text-sm">
-                ¿No tienes una cuenta? <a href="#" id="registerLink" class="text-blue-500 hover:underline">Regístrate</a>
+            <button type="submit" class="bg-[#E89CA1] hover:bg-[#505B80] text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full">Entrar</button>
+            <p class="mt-4 text-center text-[#E89CA1] text-sm">
+                ¿No tienes una cuenta? <a href="#" id="registerLink" class="text-[#505B80] hover:underline">Regístrate</a>
             </p>
         </form>
-        <div id="registrationForm" class="space-y-4 hidden">
-            <h1 class="text-2xl font-semibold mb-6 text-center text-gray-800">Registrarse</h1>
+        <form id="registrationForm" class="space-y-4 hidden">
+            <h1 class="text-2xl font-semibold mb-6 text-center text-[#505B80]">Registrarse</h1>
             <div>
-                <label for="registerEmail" class="block text-gray-700 text-sm font-bold mb-2">Correo Electrónico:</label>
+                <label for="registerEmail" class="block text-[#505B80] text-sm font-bold mb-2">Correo Electrónico:</label>
                 <input type="email" id="registerEmail" name="registerEmail" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
             </div>
             <div>
-                <label for="registerPassword" class="block text-gray-700 text-sm font-bold mb-2">Contraseña:</label>
+                <label for="registerPassword" class="block text-[#505B80] text-sm font-bold mb-2">Contraseña:</label>
                 <input type="password" id="registerPassword" name="registerPassword" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
             </div>
-            <button id="registerButton" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full">Registrar</button>
-            <button id="cancelRegister" class="mt-2 text-gray-600 hover:text-gray-800 text-sm w-full">Cancelar</button>
-        </div>
+            <button id="registerButton" type="submit" class="bg-[#ceb79d] hover:bg-[#505B80] text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full">Registrar</button>
+            <button id="cancelRegister" type="button" class="mt-2 text-[#ceb79d] hover:text-[#505B80] text-sm w-full">Cancelar</button>
+        </form>
+        <p id="errorMessage" class="text-red-500 text-sm italic" style="display: none;"></p>
     </div>
 
     <script src="./auth.js" type="module"></script>

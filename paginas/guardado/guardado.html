@@ -8,43 +8,44 @@
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
-<body class="bg-gray-100 p-6">
-    <div class="max-w-4xl mx-auto bg-white shadow-md rounded-lg p-6">
-        <h1 class="text-2xl font-bold mb-6 text-center text-gray-800">Tus Resultados y Plan de Actividades</h1>
+<body class="bg-[#f5f0ec] p-6">
+    <div class="max-w-4xl mx-auto bg-white shadow-md rounded-lg p-6 border-2 border-[#b3a28a]">
+        <h1 class="text-2xl font-bold mb-6 text-center text-[#505B80]">RESULTADOS</h1>
 
         <div id="auth-buttons-container" class="flex justify-center gap-4 mb-6">
             <button id="login-btn"
-                class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-6 rounded hidden">
+                class="bg-[#E89CA1] hover:bg-[#ceb79d] text-white font-bold py-2 px-6 rounded hidden transition-colors">
                 Iniciar Sesión
             </button>
-            <button id="logout-btn" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-6 rounded hidden">
+            <button id="logout-btn"
+                class="bg-[#E89CA1] hover:bg-[#b3a28a] text-white font-bold py-2 px-6 rounded hidden transition-colors">
                 Cerrar Sesión
             </button>
         </div>
 
         <!-- Leyenda simple -->
         <section class="mb-8">
-            <h2 class="text-xl font-semibold mb-2 text-gray-700">Resumen de Puntajes por Área</h2>
-            <div id="resumen-por-area" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <h2 class="text-xl font-semibold mb-2 text-[#505B80]">RESUMEN DE PUNTAJES</h2>
+            <div id="resumen-por-area" class="grid grid-cols-1 md:grid-cols-2 gap-4 text-[#505B80]">
                 <!-- JS insertará aquí -->
             </div>
         </section>
 
         <!-- Detalles -->
         <section class="mb-8">
-            <h2 class="text-xl font-semibold mb-2 text-gray-700">Detalles de Puntaje</h2>
-            <div id="resultados-detallados"></div>
+            <h2 class="text-xl font-semibold mb-2 text-[#505B80]">DETALLE DE PUNTAJES</h2>
+            <div id="resultados-detallados" class="text-[#505B80]"></div>
         </section>
 
         <!-- Actividades -->
         <section class="mb-8">
-            <h2 class="text-xl font-semibold mb-2 text-gray-700">Plan de Actividades Guardado</h2>
-            <div id="actividades-guardadas"></div>
+            <h2 class="text-xl font-semibold mb-2 text-[#505B80]">PLAN DE ACTIVIDADES</h2>
+            <div id="actividades-guardadas" class="text-[#505B80]"></div>
         </section>
 
         <div class="text-center">
             <button onclick="window.location.href='/'"
-                class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded">
+                class="bg-[#ceb79d] hover:bg-[#E89CA1] text-white font-bold py-2 px-6 rounded transition-colors">
                 Volver al Inicio
             </button>
         </div>
