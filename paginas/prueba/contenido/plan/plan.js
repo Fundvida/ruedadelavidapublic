@@ -1,7 +1,7 @@
 import actividadesPorArea from '../../datos/plan.data.js';
 import { auth, db } from '../../../admin/firebase-config.js';
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-import { collection, addDoc, serverTimestamp, query, where, getDocs, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+import { serverTimestamp, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
 function inicializarPlan() {
     // localStorage.removeItem('actividadesGuardadas');
@@ -50,8 +50,8 @@ function inicializarPlan() {
                     fechaGuardado: serverTimestamp(), // Esto guarda la fecha y hora del servidor de Firebase
                 };
 
-                await addDoc(collection(db, "resultados"), datosParaGuardar);
-
+                const userDocRef = doc(db, "resultados", usuario.uid);
+                await setDoc(userDocRef, datosParaGuardar, { merge: true });
                 console.log("Redirigiendo a /paginas/guardado/guardado.html");
                 window.location.href = '/paginas/guardado/guardado.html';
 
@@ -61,19 +61,14 @@ function inicializarPlan() {
         });
     }
 
-    async function cargarDatosUsuarioDesdeFirebase(uid) {
+    async function cargarDatosUsuarioDesdeFirebase(usuarioId) {
         if (respuestasUsuarioGuardadas.length === 0 || cuestionariosFiltrados.length === 0 || actividadesGuardadas.length === 0) {
             try {
-                const q = query(
-                    collection(db, "resultados"),
-                    where("usuarioId", "==", uid),
-                    orderBy("fechaGuardado", "desc"),
-                    limit(1)
-                );
-                const userDoc = await getDocs(q);
+                const userDocRef = doc(db, "resultados", usuarioId);
+                const userDoc = await getDoc(userDocRef);
 
-                if (!userDoc.empty) {
-                    const data = userDoc.docs[0].data();
+                if (userDoc.exists()) {
+                    const data = userDoc.data();
                     if (data.respuestasUsuario && respuestasUsuarioGuardadas.length === 0) {
                         localStorage.setItem('respuestasUsuario', JSON.stringify(data.respuestasUsuario));
                         respuestasUsuarioGuardadas = data.respuestasUsuario;

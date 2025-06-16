@@ -1,6 +1,6 @@
 import { auth, db } from "../admin/firebase-config.js";
 import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js"; // Importa signOut
-import { collection, query, where, getDocs, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
 document.addEventListener("DOMContentLoaded", async function () {
     let respuestasUsuario = JSON.parse(localStorage.getItem('respuestasUsuario')) || [];
@@ -46,16 +46,11 @@ document.addEventListener("DOMContentLoaded", async function () {
             return null;
         }
         try {
-            const q = query(
-                collection(db, "resultados"),
-                where("usuarioId", "==", usuarioId),
-                orderBy("fechaGuardado", "desc"),
-                limit(1)
-            );
-            const querySnapshot = await getDocs(q);
+            const userDocRef = doc(db, "resultados", usuarioId);
+            const userDoc = await getDoc(userDocRef);
 
-            if (!querySnapshot.empty) {
-                return querySnapshot.docs[0].data();
+            if (userDoc.exists()) {
+                return userDoc.data();
             } else {
                 console.log("No se encontraron resultados guardados en Firestore para este usuario.");
                 return null;
@@ -90,9 +85,9 @@ document.addEventListener("DOMContentLoaded", async function () {
         }
 
         const coloresBase = [
-        "#B85C74", "#D1788C", "#E89CA1", "#EC729C", "#F7A1B5", "#F9C5D5",
-        "#3E4660", "#505B80", "#5A668E", "#6A749F", "#9BA2C2", "#B3B9D1"
-    ];
+            "#B85C74", "#D1788C", "#E89CA1", "#EC729C", "#F7A1B5", "#F9C5D5",
+            "#3E4660", "#505B80", "#5A668E", "#6A749F", "#9BA2C2", "#B3B9D1"
+        ];
 
 
         // Mostrar resumen por área (leyenda sencilla)
