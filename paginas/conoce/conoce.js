@@ -69,7 +69,7 @@ function updateSections() {
             "p-4 md:p-6 rounded-lg shadow-xl ring-2 ring-gray-300 bg-white transition duration-300 hover:ring-4 hover:shadow-2xl hover:-translate-y-2 flex flex-col";
         div.innerHTML = `
             <h3 class="text-2xl md:text-3xl lg:text-4xl font-bold text-[#edb1b5] text-center mb-2">${section.title}</h3>
-            <p class="text-base md:text-xl lg:text-2xl text-[#505b80] text-balance tracking-widest">${section.text}</p>
+            <p class="text-base md:text-xl lg:text-2xl text-[#505b80] text-balance tracking-widest text-justify">${section.text}</p>
         `;
         container.appendChild(div);
     });
