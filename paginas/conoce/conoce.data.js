@@ -37,38 +37,38 @@ export const sections = [
     },
     {
         title: "Crecimiento Personal",
-        text: `se tratan diversos aspectos para promover el desarrollo personal. Enfatiza la importancia de examinar los 
+        text: `Se tratan diversos aspectos para promover el desarrollo personal. Enfatiza la importancia de examinar los 
         pensamientos, sentimientos y creencias personales, incluida la psicología y la inteligencia emocional.
         Advierte sobre la necesidad de examinar y desafiar las creencias limitantes sobre uno mismo y evita los 
         pensamientos duros y autocríticas.`,
     },
     {
         title: "Pareja",
-        text: `explora varios aspectos para mejorar las relaciones. El énfasis está en reconocer y manejar los conflictos 
+        text: `Explora varios aspectos para mejorar las relaciones. El énfasis está en reconocer y manejar los conflictos 
         no resueltos, así como en la limpieza emocional regular. Se recomienda dedicar mucho tiempo a las relaciones, 
         tener conversaciones significativas y participar juntos en actividades nuevas y emocionantes. Si está soltero 
         o separado puede omitir esta etapa de la vida.`,
     },
     {
         title: "Educación",
-        text: `destaca la importancia de adoptar hábitos y métodos que mejoren el aprendizaje y la asimilación de la información.
+        text: `Destaca la importancia de adoptar hábitos y métodos que mejoren el aprendizaje y la asimilación de la información.
         No se limita solo al período estudiantil, sino que es un proceso continuo a lo largo de la vida. 
         Advierte contra sentirse demasiado ansioso por aprender y presionado para estudiar.`,
     },
     {
         title: "Espiritualidad",
-        text: `destaca que esto no es sólo con la religión, ya que puede haber espiritualidad laica o no religiosa. Se argumenta 
+        text: `Destaca que esto no es sólo con la religión, ya que puede haber espiritualidad laica o no religiosa. Se argumenta 
         que la espiritualidad implica cuestionar las grandes cuestiones de la existencia, como el sentido de la vida, el 
         propósito de estar aquí y la posibilidad de algo más allá de la vida presente.`,
     },
     {
         title: "Economía",
-        text: `recomienda medir y registrar los gastos e ingresos al detalle, pero sin obsesión. examina y desafía las creencias 
+        text: `Recomienda medir y registrar los gastos e ingresos al detalle, pero sin obsesión. examina y desafía las creencias 
         arraigadas sobre el dinero, como los estereotipos negativos sobre los ricos o la creencia de que el dinero no proviene del trabajo.`,
     },
     {
         title: "Trabajo",
-        text: `sugiere dedicar tiempo a mejorar las habilidades profesionales y la empleabilidad, así como mejorar los procedimientos relacionados 
+        text: `Sugiere dedicar tiempo a mejorar las habilidades profesionales y la empleabilidad, así como mejorar los procedimientos relacionados 
         con el trabajo. Se anima a explorar las pasiones y considerar un cambio profesional si es necesario.`,
     },
     {
@@ -79,7 +79,7 @@ export const sections = [
     },
     {
         title: "Hogar",
-        text: `sugiere realizar una limpieza y organización de lo que sobra en el hogar, así como aprender a distribuir mejor el 
+        text: `Sugiere realizar una limpieza y organización de lo que sobra en el hogar, así como aprender a distribuir mejor el 
         espacio para hacerlo más agradable. Se recomienda dedicar tiempo a organizar las cosas para facilitar su orden y limpieza.`,
     },
 ];
